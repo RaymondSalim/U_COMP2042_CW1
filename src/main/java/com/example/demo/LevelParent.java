@@ -164,6 +164,7 @@ public abstract class LevelParent extends Observable {
 
 	private void handleUserProjectileCollisions() {
 		handleCollisions(userProjectiles, enemyUnits);
+		handleCollisions(userProjectiles, enemyProjectiles);
 	}
 
 	private void handleEnemyProjectileCollisions() {
