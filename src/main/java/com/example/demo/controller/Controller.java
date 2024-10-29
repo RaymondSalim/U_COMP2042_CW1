@@ -1,16 +1,16 @@
 package com.example.demo.controller;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Observable;
-import java.util.Observer;
-
 import com.example.demo.enums.LevelType;
 import com.example.demo.factory.LevelFactory;
+import com.example.demo.model.base.LevelParent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import com.example.demo.model.base.LevelParent;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Observable;
+import java.util.Observer;
 
 public class Controller implements Observer {
     private final Stage stage;

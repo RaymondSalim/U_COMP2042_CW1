@@ -2,8 +2,8 @@ package com.example.demo.view.base;
 
 public interface Destructible {
 
-	void takeDamage();
+    void takeDamage();
 
-	void destroy();
-	
+    void destroy();
+
 }
