@@ -3,6 +3,7 @@ package com.example.demo.model.base;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.demo.enums.LevelType;
 import com.example.demo.view.UserPlane;
 import com.example.demo.view.base.ActiveActorDestructible;
 import com.example.demo.view.base.FighterPlane;
@@ -77,7 +78,7 @@ public abstract class LevelParent extends Observable {
 		timeline.play();
 	}
 
-	public void goToNextLevel(String levelName) {
+	public void goToNextLevel(LevelType levelName) {
 		setChanged();
 		notifyObservers(levelName);
 	}
@@ -217,7 +218,7 @@ public abstract class LevelParent extends Observable {
 
 	protected void loseGame() {
 		timeline.stop();
-		levelView.showGameOverImage();
+//		levelView.showGameOverImage();
 	}
 
 	protected UserPlane getUser() {
