@@ -18,11 +18,6 @@ public class LevelTwo extends LevelParent {
     }
 
     @Override
-    protected void initializeFriendlyUnits() {
-        getRoot().getChildren().add(getUser());
-    }
-
-    @Override
     protected void checkIfGameOver() {
         if (userIsDestroyed()) {
             loseGame();

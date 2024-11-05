@@ -10,7 +10,7 @@ import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+import javafx.scene.image. Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -22,7 +22,6 @@ import java.util.Observable;
 import java.util.stream.Collectors;
 
 public abstract class LevelParent extends Observable {
-
     private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
     private static final int MILLISECOND_DELAY = 50;
     private final double screenHeight;
@@ -63,13 +62,15 @@ public abstract class LevelParent extends Observable {
         friendlyUnits.add(user);
     }
 
-    protected abstract void initializeFriendlyUnits();
-
     protected abstract void checkIfGameOver();
 
     protected abstract void spawnEnemyUnits();
 
     protected abstract LevelView instantiateLevelView();
+
+    private void initializeFriendlyUnits() {
+        this.root.getChildren().addAll(this.user);
+    }
 
     public Scene initializeScene() {
         initializeBackground();

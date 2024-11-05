@@ -27,11 +27,6 @@ public class LevelOne extends LevelParent {
     }
 
     @Override
-    protected void initializeFriendlyUnits() {
-        getRoot().getChildren().add(getUser());
-    }
-
-    @Override
     protected void spawnEnemyUnits() {
         int currentNumberOfEnemies = getCurrentNumberOfEnemies();
         for (int i = 0; i < TOTAL_ENEMIES - currentNumberOfEnemies; i++) {
