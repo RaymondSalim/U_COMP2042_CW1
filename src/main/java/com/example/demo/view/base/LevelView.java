@@ -1,15 +1,19 @@
-package com.example.demo.view;
+package com.example.demo.view.base;
 
+import com.example.demo.view.GameOverImage;
+import com.example.demo.view.HeartDisplay;
+import com.example.demo.view.PauseMenu;
+import com.example.demo.view.WinImage;
 import javafx.scene.Group;
 
-public class LevelView {
-
-    private static final double HEART_DISPLAY_X_POSITION = 5;
+public abstract class LevelView {
+    private static final double HEART_DISPLAY_X_POSITION = 25;
     private static final double HEART_DISPLAY_Y_POSITION = 25;
     private static final int WIN_IMAGE_X_POSITION = 355;
     private static final int WIN_IMAGE_Y_POSITION = 175;
     private static final int LOSS_SCREEN_X_POSITION = -160;
     private static final int LOSS_SCREEN_Y_POSISITION = -375;
+
     private final Group root;
     private final WinImage winImage;
     private final GameOverImage gameOverImage;
@@ -22,8 +26,12 @@ public class LevelView {
         this.gameOverImage = new GameOverImage(LOSS_SCREEN_X_POSITION, LOSS_SCREEN_Y_POSISITION);
     }
 
+    public Group getRoot() {
+        return root;
+    }
+
     public void showHeartDisplay() {
-        root.getChildren().add(heartDisplay.getContainer());
+        this.root.getChildren().add(heartDisplay.getContainer());
     }
 
     public void showWinImage() {
@@ -41,5 +49,4 @@ public class LevelView {
             heartDisplay.removeHeart();
         }
     }
-
 }
