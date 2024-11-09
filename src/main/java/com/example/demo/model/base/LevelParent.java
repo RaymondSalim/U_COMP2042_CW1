@@ -1,19 +1,21 @@
 package com.example.demo.model.base;
 
 import com.example.demo.enums.LevelType;
-import com.example.demo.view.LevelView;
+import com.example.demo.view.EnemyPlane;
 import com.example.demo.view.UserPlane;
 import com.example.demo.view.base.ActiveActorDestructible;
 import com.example.demo.view.base.FighterPlane;
+import com.example.demo.view.base.LevelView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+import javafx.scene.image. Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -22,15 +24,20 @@ import java.util.Observable;
 import java.util.stream.Collectors;
 
 public abstract class LevelParent extends Observable {
+    protected int TOTAL_ENEMIES = 5;
+    protected int KILLS_TO_ADVANCE = 10;
+    protected double ENEMY_SPAWN_PROBABILITY = .20;
+    protected LevelType NEXT_LEVEL;
 
     private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
     private static final int MILLISECOND_DELAY = 50;
+    private int PLAYER_INITIAL_HEALTH;
     private final double screenHeight;
     private final double screenWidth;
     private final double enemyMaximumYPosition;
 
     private final Group root;
-    private final Timeline timeline;
+    protected final Timeline timeline;
     private final UserPlane user;
     private final Scene scene;
     private final ImageView background;
@@ -44,10 +51,12 @@ public abstract class LevelParent extends Observable {
     private final LevelView levelView;
 
     public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
+        this.PLAYER_INITIAL_HEALTH = playerInitialHealth;
+
         this.root = new Group();
         this.scene = new Scene(root, screenWidth, screenHeight);
         this.timeline = new Timeline();
-        this.user = new UserPlane(playerInitialHealth);
+        this.user = new UserPlane(this.PLAYER_INITIAL_HEALTH);
         this.friendlyUnits = new ArrayList<>();
         this.enemyUnits = new ArrayList<>();
         this.userProjectiles = new ArrayList<>();
@@ -59,17 +68,37 @@ public abstract class LevelParent extends Observable {
         this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
         this.levelView = instantiateLevelView();
         this.currentNumberOfEnemies = 0;
+
+        // Lock in place
+        root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
+        root.layoutYProperty().addListener((obs, oldVal, newVal) -> root.setLayoutY(0));
+
         initializeTimeline();
         friendlyUnits.add(user);
     }
 
-    protected abstract void initializeFriendlyUnits();
+    protected void checkIfGameOver() {
+        if (userIsDestroyed()) {
+            loseGame();
+        }
+    }
 
-    protected abstract void checkIfGameOver();
-
-    protected abstract void spawnEnemyUnits();
+    protected void spawnEnemyUnits() {
+        int currentNumberOfEnemies = getCurrentNumberOfEnemies();
+        for (int i = 0; i < TOTAL_ENEMIES - currentNumberOfEnemies; i++) {
+            if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
+                double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition();
+                ActiveActorDestructible newEnemy = new EnemyPlane(getScreenWidth(), newEnemyInitialYPosition);
+                addEnemyUnit(newEnemy);
+            }
+        }
+    }
 
     protected abstract LevelView instantiateLevelView();
+
+    private void initializeFriendlyUnits() {
+        this.root.getChildren().addAll(this.user);
+    }
 
     public Scene initializeScene() {
         initializeBackground();
@@ -88,7 +117,7 @@ public abstract class LevelParent extends Observable {
         notifyObservers(levelName);
     }
 
-    private void updateScene() {
+    public void updateScene() {
         spawnEnemyUnits();
         updateActors();
         generateEnemyFire();
@@ -230,7 +259,7 @@ public abstract class LevelParent extends Observable {
         return user;
     }
 
-    protected Group getRoot() {
+    public Group getRoot() {
         return root;
     }
 
