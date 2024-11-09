@@ -14,10 +14,10 @@ public class UIController implements GameEventListener {
 
     @Override
     public void onGamePaused() {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Game Paused");
-        alert.setContentText("The game is paused. Press resume to continue.");
-        alert.show();
+//        Alert alert = new Alert(AlertType.INFORMATION);
+//        alert.setTitle("Game Paused");
+//        alert.setContentText("The game is paused. Press resume to continue.");
+//        alert.show();
     }
 
     @Override

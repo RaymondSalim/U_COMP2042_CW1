@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import com.example.demo.controller.GameController;
-import com.example.demo.controller.InputController;
 import com.example.demo.controller.LevelController;
 import com.example.demo.controller.UIController;
 import javafx.application.Application;
@@ -19,15 +18,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws SecurityException, IllegalArgumentException {
-
         GameController gameController = new GameController(stage);
         LevelController levelController = new LevelController();
         UIController uiController = new UIController(stage);
-        InputController inputController = new InputController();
 
         gameController.setLevelController(levelController);
         gameController.setGameEventListener(uiController);
-        inputController.setGameController(gameController);
 
         stage.setTitle(TITLE);
         stage.setResizable(false);

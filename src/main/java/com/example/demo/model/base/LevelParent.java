@@ -15,6 +15,7 @@ import javafx.scene.image. Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -67,6 +68,11 @@ public abstract class LevelParent extends Observable {
         this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
         this.levelView = instantiateLevelView();
         this.currentNumberOfEnemies = 0;
+
+        // Lock in place
+        root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
+        root.layoutYProperty().addListener((obs, oldVal, newVal) -> root.setLayoutY(0));
+
         initializeTimeline();
         friendlyUnits.add(user);
     }
@@ -253,7 +259,7 @@ public abstract class LevelParent extends Observable {
         return user;
     }
 
-    protected Group getRoot() {
+    public Group getRoot() {
         return root;
     }
 
