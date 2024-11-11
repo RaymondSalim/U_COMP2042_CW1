@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.context.AppContext;
 import com.example.demo.controller.GameController;
 import com.example.demo.controller.LevelController;
 import com.example.demo.controller.UIController;
@@ -18,17 +19,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws SecurityException, IllegalArgumentException {
-        GameController gameController = new GameController(stage);
-        LevelController levelController = new LevelController();
-        UIController uiController = new UIController(stage);
+        AppContext context = AppContext.getInstance();
+        context.setScreenSize(SCREEN_HEIGHT, SCREEN_WIDTH);
 
-        gameController.setLevelController(levelController);
-        gameController.setGameEventListener(uiController);
+        GameController gameController = new GameController(stage);
 
         stage.setTitle(TITLE);
         stage.setResizable(false);
-        stage.setHeight(SCREEN_HEIGHT);
-        stage.setWidth(SCREEN_WIDTH);
+        stage.setHeight(context.getScreenHeight());
+        stage.setWidth(context.getScreenWidth());
 
         gameController.launchGame();
     }

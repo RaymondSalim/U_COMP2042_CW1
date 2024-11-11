@@ -38,6 +38,10 @@ public class HeartDisplay {
         }
     }
 
+    public void resetHearts() {
+        this.initializeHearts();
+    }
+
     public void removeHeart() {
         if (!container.getChildren().isEmpty())
             container.getChildren().remove(INDEX_OF_FIRST_ITEM);

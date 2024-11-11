@@ -1,5 +1,6 @@
 package com.example.demo.view;
 
+import com.example.demo.model.Player;
 import com.example.demo.view.base.ActiveActorDestructible;
 import com.example.demo.view.base.FighterPlane;
 
@@ -14,12 +15,19 @@ public class UserPlane extends FighterPlane {
     private static final int VERTICAL_VELOCITY = 8;
     private static final int PROJECTILE_X_POSITION = 110;
     private static final int PROJECTILE_Y_POSITION_OFFSET = 20;
-    private int velocityMultiplier;
-    private int numberOfKills;
 
-    public UserPlane(int initialHealth) {
-        super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, initialHealth);
-        velocityMultiplier = 0;
+    private int velocityMultiplier;
+    private final Player player;
+
+    public UserPlane(Player player) {
+        super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, player.getHealth());
+        this.velocityMultiplier = 0;
+        this.player = player;
+    }
+
+    public void resetPosition() {
+        this.setLayoutX(INITIAL_X_POSITION);
+        this.setLayoutY(INITIAL_Y_POSITION);
     }
 
     @Override
@@ -60,12 +68,19 @@ public class UserPlane extends FighterPlane {
         velocityMultiplier = 0;
     }
 
-    public int getNumberOfKills() {
-        return numberOfKills;
+    public int getHealth() {
+        return player.getHealth();
     }
 
     public void incrementKillCount() {
-        numberOfKills++;
+        player.incrementKillCount();
     }
 
+    public void takeDamage() {
+        player.takeDamage();
+    }
+
+    public boolean isDestroyed() {
+        return player.isDestroyed();
+    }
 }
