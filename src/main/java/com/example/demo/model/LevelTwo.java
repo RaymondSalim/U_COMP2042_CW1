@@ -9,10 +9,9 @@ public class LevelTwo extends LevelParent {
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.jpg";
     private static final int PLAYER_INITIAL_HEALTH = 5;
     private final Boss boss;
-    private com.example.demo.view.LevelTwo levelView;
 
-    public LevelTwo(double screenHeight, double screenWidth) {
-        super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH);
+    public LevelTwo() {
+        super(BACKGROUND_IMAGE_NAME, PLAYER_INITIAL_HEALTH);
         boss = new Boss();
     }
 
@@ -22,16 +21,18 @@ public class LevelTwo extends LevelParent {
     }
 
     @Override
-    protected void checkIfGameOver() {
-        super.checkIfGameOver();
+    public void updateScene() {
+        super.updateScene();  // This will check for game over and level completion based on player health and kills
+
+        // Check if the boss is defeated to trigger a win state
         if (boss.isDestroyed()) {
-            winGame();
+            notifyWin();
         }
     }
 
     @Override
     protected void spawnEnemyUnits() {
-        if (getCurrentNumberOfEnemies() == 0) {
+        if (getEnemyUnits().isEmpty()) {  // Only add the boss if there are no other enemies
             addEnemyUnit(boss);
         }
     }

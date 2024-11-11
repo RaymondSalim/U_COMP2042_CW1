@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.enums.LevelType;
 import com.example.demo.factory.LevelFactory;
 import com.example.demo.model.base.LevelParent;
+import com.example.demo.observer.GameStateObservable;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -11,7 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class LevelController implements GameStateObserver {
+public class LevelController implements GameStateObservable {
     private final Stage stage;
     private final UIController uiController;
 
@@ -29,8 +30,22 @@ public class LevelController implements GameStateObserver {
         resumeGame();
     }
 
+    @Override
+    public void onGameOver() {
+        this.gameTimeline.pause();
+        this.uiController.showGameOverOverlay();
+    }
+
+    @Override
+    public void onLevelRestart() {
+        this.currentLevel.resetLevel();
+        this.gameTimeline.play();
+    }
+
     public void goToLevel(LevelType levelType) {
         currentLevel = LevelFactory.createLevel(levelType);
+        currentLevel.addGameStateObserver(this);
+
         StackPane mainLayout = new StackPane(currentLevel.getRoot());
 
         uiController.addOverlayToLayout(mainLayout);

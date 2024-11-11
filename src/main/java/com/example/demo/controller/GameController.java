@@ -18,8 +18,4 @@ public class GameController {
         stage.show();
         levelController.goToLevel(LevelType.LEVEL_ONE);
     }
-
-    public void showGameOver() {
-        uiController.showGameOverAlert();  // Show game over alert using UIController
-    }
 }
