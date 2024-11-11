@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.enums.LevelType;
 import com.example.demo.factory.LevelFactory;
 import com.example.demo.model.base.LevelParent;
-import com.example.demo.observer.GameStateObservable;
+import com.example.demo.observer.GameStateObserver;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -12,7 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class LevelController implements GameStateObservable {
+public class LevelController implements GameStateObserver {
     private final Stage stage;
     private final UIController uiController;
 

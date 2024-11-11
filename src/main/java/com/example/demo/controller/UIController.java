@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.enums.GameState;
 import com.example.demo.observer.GameStateObservable;
-import com.example.demo.observer.GameStateObserver;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -11,14 +10,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class UIController extends GameStateObserver {
+public class UIController extends GameStateObservable {
     private final Stage stage;
     private final StackPane pauseOverlay;  // Encapsulate overlay in UIController
     private final StackPane gameOverOverlay;  // Encapsulate overlay in UIController
-    private final List<GameStateObservable> observers = new ArrayList<>();  // List of observers
 
     public UIController(Stage stage) {
         this.stage = stage;

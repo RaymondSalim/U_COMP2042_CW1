@@ -1,33 +1,19 @@
 package com.example.demo.observer;
 
-public interface GameStateObservable {
-    default void onResumeGame() {
+import com.example.demo.enums.GameState;
+import com.example.demo.observer.base.BaseObservable;
+
+public abstract class GameStateObservable extends BaseObservable<GameStateObserver> {
+    public void notifyEvent(GameState gameState) {
+        for (GameStateObserver observer : observers) {
+            switch (gameState) {
+                case WIN -> observer.onGameWin();
+                case PAUSED -> observer.onPauseGame();
+                case RESUMED -> observer.onResumeGame();
+                case GAME_OVER -> observer.onGameOver();
+                case LEVEL_COMPLETED -> observer.onLevelComplete();
+                case LEVEL_RESTARTED -> observer.onLevelRestart();
+            }
+        }
     }
-
-    ;
-
-    default void onPauseGame() {
-    }
-
-    ;
-
-    default void onLevelComplete() {
-    }
-
-    ;
-
-    default void onLevelRestart() {
-    }
-
-    ;
-
-    default void onGameWin() {
-    }
-
-    ;
-
-    default void onGameOver() {
-    }
-
-    ;
 }

@@ -4,7 +4,7 @@ import com.example.demo.context.AppContext;
 import com.example.demo.enums.GameState;
 import com.example.demo.enums.LevelType;
 import com.example.demo.model.Player;
-import com.example.demo.observer.GameStateObserver;
+import com.example.demo.observer.GameStateObservable;
 import com.example.demo.view.EnemyPlane;
 import com.example.demo.view.UserPlane;
 import com.example.demo.view.base.ActiveActorDestructible;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class LevelParent extends GameStateObserver {
+public abstract class LevelParent extends GameStateObservable {
     protected int TOTAL_ENEMIES = 5;
     protected int KILLS_TO_ADVANCE = 10;
     protected double ENEMY_SPAWN_PROBABILITY = .20;
