@@ -12,3 +12,4 @@ Here is the list of (hopefully) all the changes made
 
 ## Features
 - Add pause menu in game
+- Implement Observer Pattern to handle game events

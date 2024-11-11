@@ -6,14 +6,10 @@ import com.example.demo.model.LevelTwo;
 import com.example.demo.model.base.LevelParent;
 
 public class LevelFactory {
-    public static LevelParent createLevel(LevelType levelType, double height, double width) {
-        switch (levelType) {
-            case LEVEL_ONE:
-                return new LevelOne(height, width);
-            case LEVEL_TWO:
-                return new LevelTwo(height, width);
-            default:
-                throw new IllegalArgumentException("Unknown level: " + levelType);
-        }
+    public static LevelParent createLevel(LevelType levelType) {
+        return switch (levelType) {
+            case LEVEL_ONE -> new LevelOne();
+            case LEVEL_TWO -> new LevelTwo();
+        };
     }
 }
