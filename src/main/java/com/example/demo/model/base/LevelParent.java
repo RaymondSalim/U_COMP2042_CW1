@@ -45,8 +45,8 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     public LevelParent(String backgroundImageName, int playerInitialHealth) {
         this.root = new Group();
-        root.layoutXProperty().addListener((_, _, _) -> root.setLayoutX(0));
-        root.layoutYProperty().addListener((_, _, _) -> root.setLayoutY(0));
+        root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
+        root.layoutYProperty().addListener((obs, oldVal, newVal) -> root.setLayoutY(0));
 
         AppContext context = AppContext.getInstance();
         this.screenHeight = context.getScreenHeight();
