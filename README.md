@@ -1,6 +1,32 @@
 # COMP2042 Coursework
 Raymond Salim 20595118
 
+[GitHub Repository](https://github.com/RaymondSalim/U_COMP2042_CW1)
+
+# Compilation Instruction
+
+## Prerequisites
+
+First things first, ensure that the following applications are installed:
+
+1. Maven (v3.9 or above)
+2. Java (JDK 19 or above)
+
+You can verify this by executing the following command
+
+```shell
+mvn --version
+java --version
+```
+
+## Running
+
+Run the following command to run the app
+
+```shell
+mvn clean javafx:run
+```
+
 # Changes
 Here is the list of (hopefully) all the changes made
 
