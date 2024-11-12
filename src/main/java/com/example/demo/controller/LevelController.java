@@ -55,9 +55,13 @@ public class LevelController implements GameStateObserver {
         if (levelType != null) {
             goToLevel(levelType);
             startGame();
-        } else {
-            // TODO! Game Win
         }
+    }
+
+    @Override
+    public void onGameWin() {
+        this.gameTimeline.stop();
+        // TODO! Stop game, show credits
     }
 
     public void goToLevel(LevelType levelType) {
