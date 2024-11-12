@@ -21,12 +21,9 @@ public class LevelTwo extends LevelParent {
     }
 
     @Override
-    public void updateScene() {
-        super.updateScene();  // This will check for game over and level completion based on player health and kills
-
-        // Check if the boss is defeated to trigger a win state
+    protected void checkKillCount() {
         if (boss.isDestroyed()) {
-            notifyWin();
+            levelComplete();
         }
     }
 
