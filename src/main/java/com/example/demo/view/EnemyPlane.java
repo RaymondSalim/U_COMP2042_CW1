@@ -4,7 +4,6 @@ import com.example.demo.view.base.ActiveActorDestructible;
 import com.example.demo.view.base.FighterPlane;
 
 public class EnemyPlane extends FighterPlane {
-
     private static final String IMAGE_NAME = "enemyplane.png";
     private static final int IMAGE_HEIGHT = 150;
     private static final int HORIZONTAL_VELOCITY = -6;

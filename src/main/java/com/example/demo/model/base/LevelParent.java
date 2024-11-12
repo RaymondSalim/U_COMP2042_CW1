@@ -5,13 +5,13 @@ import com.example.demo.enums.GameState;
 import com.example.demo.enums.LevelType;
 import com.example.demo.model.Player;
 import com.example.demo.observer.GameStateObservable;
+import com.example.demo.observer.ScreenSizeObserver;
 import com.example.demo.view.EnemyPlane;
 import com.example.demo.view.UserPlane;
 import com.example.demo.view.base.ActiveActorDestructible;
 import com.example.demo.view.base.FighterPlane;
 import com.example.demo.view.base.LevelView;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -20,20 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class LevelParent extends GameStateObservable {
+public abstract class LevelParent extends GameStateObservable implements ScreenSizeObserver {
     protected int TOTAL_ENEMIES = 5;
     protected int KILLS_TO_ADVANCE = 10;
     protected double ENEMY_SPAWN_PROBABILITY = .20;
     protected LevelType NEXT_LEVEL;
 
-    private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
-    private final double screenHeight;
-    private final double screenWidth;
-    private final double enemyMaximumYPosition;
+    private static final double BOTTOM_MARGIN = 150;
+    private double screenHeight;
+    private double screenWidth;
+    private double enemyMaximumYPosition;
 
     private final Group root;
     private final UserPlane user;
-    private final Scene scene;
     private final ImageView background;
 
     private final Player player;
@@ -46,16 +45,15 @@ public abstract class LevelParent extends GameStateObservable {
 
     public LevelParent(String backgroundImageName, int playerInitialHealth) {
         this.root = new Group();
-        root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
-        root.layoutYProperty().addListener((obs, oldVal, newVal) -> root.setLayoutY(0));
+        root.layoutXProperty().addListener((_, _, _) -> root.setLayoutX(0));
+        root.layoutYProperty().addListener((_, _, _) -> root.setLayoutY(0));
 
         AppContext context = AppContext.getInstance();
         this.screenHeight = context.getScreenHeight();
         this.screenWidth = context.getScreenWidth();
 
-        this.scene = new Scene(root, screenWidth, screenHeight);
         this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
-        this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
+        this.enemyMaximumYPosition = screenHeight - BOTTOM_MARGIN;
         this.levelView = instantiateLevelView();
         initializeBackground();
 
@@ -70,6 +68,43 @@ public abstract class LevelParent extends GameStateObservable {
         levelView.showHeartDisplay();
         friendlyUnits.add(user);
         initializeFriendlyUnits();
+    }
+
+    @Override
+    public void onScreenSizeChanged(int newHeight, int newWidth) {
+        this.screenHeight = newHeight;
+        this.screenWidth = newWidth;
+
+        this.enemyMaximumYPosition = this.screenHeight - BOTTOM_MARGIN;
+
+        root.getChildren().remove(background);
+        background.setFitHeight(this.screenHeight);
+        background.setFitWidth(this.screenWidth);
+        root.getChildren().add(0, background);
+
+        repositionOutOfBoundsActors();
+    }
+
+    private void repositionOutOfBoundsActors() {
+        for (ActiveActorDestructible enemy : enemyUnits) {
+            double enemyYPosition = enemy.getLayoutY() + enemy.getTranslateY();
+            if (enemyYPosition > enemyMaximumYPosition) {
+                enemy.setTranslateY(enemyMaximumYPosition - enemy.getLayoutY()); // Move back within bounds
+            } else if (enemyYPosition < 0) {
+                enemy.setTranslateY(-enemy.getLayoutY()); // Move to the top bound
+            }
+        }
+
+        List<ActiveActorDestructible> projectiles = new ArrayList<>();
+        projectiles.addAll(userProjectiles);
+        projectiles.addAll(enemyProjectiles);
+
+        for (ActiveActorDestructible projectile : projectiles) {
+            double projectileYPosition = projectile.getLayoutY() + projectile.getTranslateY();
+            if (projectileYPosition > screenHeight || projectileYPosition < 0) {
+                projectile.destroy();
+            }
+        }
     }
 
     public void resetLevel() {
@@ -88,7 +123,7 @@ public abstract class LevelParent extends GameStateObservable {
         initializeFriendlyUnits();
     }
 
-    public void removeAllActors() {
+    private void removeAllActors() {
         root.getChildren().removeAll(this.friendlyUnits);
         root.getChildren().removeAll(this.enemyUnits);
         root.getChildren().removeAll(this.userProjectiles);

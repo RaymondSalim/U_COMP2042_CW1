@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.context.AppContext;
 import com.example.demo.enums.LevelType;
 import com.example.demo.factory.LevelFactory;
 import com.example.demo.model.base.LevelParent;
@@ -45,6 +46,9 @@ public class LevelController implements GameStateObserver {
     public void goToLevel(LevelType levelType) {
         currentLevel = LevelFactory.createLevel(levelType);
         currentLevel.addGameStateObserver(this);
+
+        AppContext context = AppContext.getInstance();
+        context.addGameStateObserver(currentLevel);
 
         StackPane mainLayout = new StackPane(currentLevel.getRoot());
 

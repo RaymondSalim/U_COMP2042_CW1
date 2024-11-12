@@ -13,4 +13,7 @@ public abstract class BaseObservable<T> {
     public void removeGameStateObserver(T observer) {
         observers.remove(observer);
     }
+
+    public void notifyObservers() {
+    }
 }
