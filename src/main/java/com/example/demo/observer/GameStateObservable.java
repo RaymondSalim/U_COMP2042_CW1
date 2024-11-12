@@ -12,6 +12,7 @@ public abstract class GameStateObservable extends BaseObservable<GameStateObserv
                 case RESUMED -> observer.onResumeGame();
                 case GAME_OVER -> observer.onGameOver();
                 case LEVEL_COMPLETED -> observer.onLevelComplete();
+                case LEVEL_ADVANCED -> observer.onLevelAdvance();
                 case LEVEL_RESTARTED -> observer.onLevelRestart();
             }
         }
