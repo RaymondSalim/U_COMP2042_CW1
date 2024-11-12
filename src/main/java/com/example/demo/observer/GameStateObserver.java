@@ -1,31 +1,25 @@
 package com.example.demo.observer;
 
-import com.example.demo.enums.GameState;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class GameStateObserver {
-    private final List<GameStateObservable> observers = new ArrayList<>();
-
-    public void addGameStateObserver(GameStateObservable observer) {
-        observers.add(observer);
+public interface GameStateObserver {
+    default void onResumeGame() {
     }
 
-    public void removeGameStateObserver(GameStateObservable observer) {
-        observers.remove(observer);
+    default void onPauseGame() {
     }
 
-    public void notifyEvent(GameState gameState) {
-        for (GameStateObservable observer : observers) {
-            switch (gameState) {
-                case WIN -> observer.onGameWin();
-                case PAUSED -> observer.onPauseGame();
-                case RESUMED -> observer.onResumeGame();
-                case GAME_OVER -> observer.onGameOver();
-                case LEVEL_COMPLETED -> observer.onLevelComplete();
-                case LEVEL_RESTARTED -> observer.onLevelRestart();
-            }
-        }
+    default void onLevelComplete() {
     }
+
+
+    default void onLevelRestart() {
+    }
+
+
+    default void onGameWin() {
+    }
+
+
+    default void onGameOver() {
+    }
+
 }
