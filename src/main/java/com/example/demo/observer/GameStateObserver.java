@@ -10,6 +10,8 @@ public interface GameStateObserver {
     default void onLevelComplete() {
     }
 
+    default void onLevelAdvance() {
+    }
 
     default void onLevelRestart() {
     }

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public abstract class LevelParent extends GameStateObservable implements ScreenSizeObserver {
     protected int TOTAL_ENEMIES = 5;
-    protected int KILLS_TO_ADVANCE = 10;
+    protected int KILLS_TO_ADVANCE;
     protected double ENEMY_SPAWN_PROBABILITY = .20;
     protected LevelType NEXT_LEVEL;
 
@@ -136,16 +136,12 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         return enemyUnits;
     }
 
-    protected Player getPlayer() {
-        return player;
-    }
-
     public Group getRoot() {
         return root;
     }
 
-    public LevelView getLevelView() {
-        return levelView;
+    public LevelType getNextLevel() {
+        return NEXT_LEVEL;
     }
 
     public void updateScene() {
@@ -168,9 +164,17 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         }
     }
 
-    private void checkKillCount() {
+    protected void checkKillCount() {
         if (player.getKillCount() >= KILLS_TO_ADVANCE) {
+            levelComplete();
+        }
+    }
+
+    protected void levelComplete() {
+        if (this.NEXT_LEVEL != null) {
             notifyEvent(GameState.LEVEL_COMPLETED);
+        } else {
+            notifyEvent(GameState.WIN);
         }
     }
 
@@ -244,11 +248,36 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     private void handlePlaneCollisions() {
-        handleCollisions(friendlyUnits, enemyUnits);
+        for (ActiveActorDestructible friendly : friendlyUnits) {
+            for (ActiveActorDestructible enemy : enemyUnits) {
+                if (friendly.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                    friendly.takeDamage();
+                    enemy.takeDamage();
+
+                    // Check if enemy is destroyed
+                    if (enemy.isDestroyed()) {
+                        user.incrementKillCount();
+                    }
+                }
+            }
+        }
     }
 
     private void handleUserProjectileCollisions() {
-        handleCollisions(userProjectiles, enemyUnits);
+        for (ActiveActorDestructible projectile : userProjectiles) {
+            for (ActiveActorDestructible enemy : enemyUnits) {
+                if (projectile.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                    projectile.takeDamage();
+                    enemy.takeDamage();
+
+                    // Check if enemy is destroyed
+                    if (enemy.isDestroyed()) {
+                        user.incrementKillCount();
+                    }
+                }
+            }
+        }
+
         handleCollisions(userProjectiles, enemyProjectiles);
     }
 
@@ -288,9 +317,5 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     protected void addEnemyUnit(ActiveActorDestructible enemy) {
         enemyUnits.add(enemy);
         root.getChildren().add(enemy);
-    }
-
-    public void notifyWin() {
-        notifyEvent(GameState.WIN);
     }
 }

@@ -12,13 +12,15 @@ import javafx.stage.Stage;
 
 public class UIController extends GameStateObservable {
     private final Stage stage;
-    private final StackPane pauseOverlay;  // Encapsulate overlay in UIController
-    private final StackPane gameOverOverlay;  // Encapsulate overlay in UIController
+    private final StackPane pauseOverlay;
+    private final StackPane gameOverOverlay;
+    private final StackPane levelCompleteOverlay;
 
     public UIController(Stage stage) {
         this.stage = stage;
         this.pauseOverlay = createPauseOverlay();
         this.gameOverOverlay = createGameOverOverlay();
+        this.levelCompleteOverlay = createLevelCompleteOverlay();
     }
 
     public void showPauseOverlay() {
@@ -37,6 +39,14 @@ public class UIController extends GameStateObservable {
         gameOverOverlay.setVisible(false);
     }
 
+    public void showLevelCompleteOverlay() {
+        levelCompleteOverlay.setVisible(true);
+    }
+
+    public void hideLevelCompleteOverlay() {
+        levelCompleteOverlay.setVisible(false);
+    }
+
     private StackPane createPauseOverlay() {
         VBox overlayContent = new VBox(10);
         overlayContent.setAlignment(Pos.CENTER);
@@ -46,12 +56,12 @@ public class UIController extends GameStateObservable {
         resumeButton.setOnAction(e -> {
             notifyEvent(GameState.RESUMED);
             hidePauseOverlay();
-        });  // Hide overlay when resume is clicked
+        });
 
         overlayContent.getChildren().addAll(resumeButton);
         StackPane overlay = new StackPane(background, overlayContent);
         overlay.setAlignment(Pos.CENTER);
-        overlay.setVisible(false);  // Start with overlay hidden
+        overlay.setVisible(false);
         return overlay;
     }
 
@@ -73,8 +83,34 @@ public class UIController extends GameStateObservable {
         return overlay;
     }
 
+    private StackPane createLevelCompleteOverlay() {
+        VBox overlayContent = new VBox(10);
+        overlayContent.setAlignment(Pos.CENTER);
+
+        Rectangle background = new Rectangle(300, 200, Color.rgb(0, 0, 0, 0.7));
+        Button nextLevelButton = new Button("Next Level");
+        Button restartButton = new Button("Restart");
+
+        nextLevelButton.setOnAction(e -> {
+            notifyEvent(GameState.LEVEL_ADVANCED);
+            hideLevelCompleteOverlay();
+        });
+
+        restartButton.setOnAction(e -> {
+            notifyEvent(GameState.LEVEL_RESTARTED);
+            hideLevelCompleteOverlay();
+        });
+
+        overlayContent.getChildren().addAll(nextLevelButton, restartButton);
+        StackPane overlay = new StackPane(background, overlayContent);
+        overlay.setAlignment(Pos.CENTER);
+        overlay.setVisible(false);
+        return overlay;
+    }
+
     public void addOverlayToLayout(StackPane layout) {
         layout.getChildren().add(pauseOverlay);
         layout.getChildren().add(gameOverOverlay);
+        layout.getChildren().add(levelCompleteOverlay);
     }
 }

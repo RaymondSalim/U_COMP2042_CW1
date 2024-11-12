@@ -5,6 +5,7 @@ public enum GameState {
     RESUMED,
     GAME_OVER,
     LEVEL_COMPLETED,
+    LEVEL_ADVANCED,
     LEVEL_RESTARTED,
     WIN
 }

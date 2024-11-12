@@ -43,6 +43,27 @@ public class LevelController implements GameStateObserver {
         this.gameTimeline.play();
     }
 
+    @Override
+    public void onLevelComplete() {
+        this.gameTimeline.pause();
+        uiController.showLevelCompleteOverlay();
+    }
+
+    @Override
+    public void onLevelAdvance() {
+        LevelType levelType = currentLevel.getNextLevel();
+        if (levelType != null) {
+            goToLevel(levelType);
+            startGame();
+        }
+    }
+
+    @Override
+    public void onGameWin() {
+        this.gameTimeline.stop();
+        // TODO! Stop game, show credits
+    }
+
     public void goToLevel(LevelType levelType) {
         currentLevel = LevelFactory.createLevel(levelType);
         currentLevel.addGameStateObserver(this);
@@ -69,6 +90,7 @@ public class LevelController implements GameStateObserver {
         }
         gameTimeline.play();
         uiController.hidePauseOverlay();
+        uiController.hideLevelCompleteOverlay();
     }
 
     public void pauseGame() {
