@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.context.AppContext;
 import com.example.demo.controller.GameController;
 import com.example.demo.observer.ScreenSizeObserver;
+import com.example.demo.view.MenuScreen;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -31,6 +32,9 @@ public class Main extends Application implements ScreenSizeObserver {
 
         GameController gameController = new GameController(stage);
 
+        MenuScreen menuScreen = new MenuScreen(stage, gameController);
+        menuScreen.show();
+
         stage.setTitle(TITLE);
         stage.setResizable(true);
         stage.setMinWidth(MIN_SCREEN_WIDTH);
@@ -43,8 +47,6 @@ public class Main extends Application implements ScreenSizeObserver {
         stage.heightProperty().addListener((observable, oldValue, newValue) -> {
             context.setScreenSize(newValue.intValue(), context.getScreenWidth());
         });
-
-        gameController.launchGame();
     }
 
     @Override

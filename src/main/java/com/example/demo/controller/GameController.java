@@ -6,16 +6,16 @@ import javafx.stage.Stage;
 public class GameController {
     private final Stage stage;
     private final LevelController levelController;
-    private final UIController uiController;  // Reference UIController
+    private final UIController uiController;
 
     public GameController(Stage stage) {
         this.stage = stage;
         this.uiController = new UIController(stage);
-        this.levelController = new LevelController(stage, uiController);  // Pass UIController to LevelController
+        this.levelController = new LevelController(stage, uiController);
     }
 
-    public void launchGame() {
+    public void goToLevel(LevelType levelType) {
         stage.show();
-        levelController.goToLevel(LevelType.LEVEL_ONE);
+        levelController.goToLevel(levelType);
     }
 }
