@@ -27,6 +27,18 @@ Run the following command to run the app
 mvn clean javafx:run
 ```
 
+# Game Assets
+
+Most of the game assets are initially provided in the repository.
+
+Additional game assets are obtained and edited based from the following links
+
+- https://craftpix.net/freebies/free-space-shooter-game-gui/
+- https://craftpix.net/freebies/free-sky-with-clouds-background-pixel-art-set/
+- https://craftpix.net/freebies/free-space-shooter-game-objects/
+
+The license for the additional assets can be found [here](https://craftpix.net/file-licenses/).
+
 # Changes
 Here is the list of (hopefully) all the changes made
 
