@@ -8,19 +8,20 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
 public class UIController extends GameStateObservable {
-    private final Stage stage;
     private final StackPane pauseOverlay;
     private final StackPane gameOverOverlay;
     private final StackPane levelCompleteOverlay;
 
-    public UIController(Stage stage) {
-        this.stage = stage;
+    public UIController() {
         this.pauseOverlay = createPauseOverlay();
         this.gameOverOverlay = createGameOverOverlay();
         this.levelCompleteOverlay = createLevelCompleteOverlay();
+    }
+
+    public void addOverlayToLayout(StackPane layout) {
+        layout.getChildren().addAll(pauseOverlay, gameOverOverlay, levelCompleteOverlay);
     }
 
     public void showPauseOverlay() {
@@ -106,11 +107,5 @@ public class UIController extends GameStateObservable {
         overlay.setAlignment(Pos.CENTER);
         overlay.setVisible(false);
         return overlay;
-    }
-
-    public void addOverlayToLayout(StackPane layout) {
-        layout.getChildren().add(pauseOverlay);
-        layout.getChildren().add(gameOverOverlay);
-        layout.getChildren().add(levelCompleteOverlay);
     }
 }

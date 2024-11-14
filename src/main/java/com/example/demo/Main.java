@@ -29,7 +29,6 @@ public class Main extends Application implements ScreenSizeObserver {
         context.addGameStateObserver(this);
         context.setScreenSize(SCREEN_HEIGHT, SCREEN_WIDTH);
 
-        GameController gameController = new GameController(stage);
 
         stage.setTitle(TITLE);
         stage.setResizable(true);
@@ -44,7 +43,8 @@ public class Main extends Application implements ScreenSizeObserver {
             context.setScreenSize(newValue.intValue(), context.getScreenWidth());
         });
 
-        gameController.launchGame();
+        GameController gameController = new GameController(stage);
+        gameController.showMenuScreen();
     }
 
     @Override
