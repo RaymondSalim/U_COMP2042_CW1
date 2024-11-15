@@ -63,7 +63,7 @@ jobs:
 
       - name: Create Tag
         run: |
-          git rev-parse --short HEAD >> $SHORT_SHA
+          export SHORT_SHA=$(git rev-parse --short HEAD)
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git tag "$SHORT_SHA"
@@ -74,6 +74,6 @@ jobs:
         uses: softprops/action-gh-release@v2.1.0
         with:
           files: ./target/*.jar
-          tag_name: env.tag_name
+          tag_name: env.SHORT_SHA
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
