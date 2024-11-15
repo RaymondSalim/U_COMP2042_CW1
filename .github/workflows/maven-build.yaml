@@ -75,6 +75,6 @@ jobs:
         uses: softprops/action-gh-release@v2.1.0
         with:
           files: ./target/*.jar
-          tag_name: ${{ steps.git-tag.outputs.short_sha }}"
+          tag_name: ${{ steps.git-tag.outputs.short_sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
