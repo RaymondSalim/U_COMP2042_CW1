@@ -74,6 +74,6 @@ jobs:
         uses: softprops/action-gh-release@v2.1.0
         with:
           files: ./target/*.jar
-          tag_name: env.SHORT_SHA
+          tag_name: ${{env.SHORT_SHA}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
