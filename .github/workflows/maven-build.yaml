@@ -40,7 +40,7 @@ jobs:
 
   release:
     needs: build
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -61,9 +61,18 @@ jobs:
       - name: Build with Maven
         run: mvn clean install -B
 
+      - name: Create Tag
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git tag "${{ github.sha }}"
+          git push origin "${{ github.sha }}"
+          echo "tag_name=${{ github.sha }}" >> $GITHUB_ENV
+
       - name: Create Release
         uses: softprops/action-gh-release@v2.1.0
         with:
           files: ./target/*.jar
+          tag_name: env.tag_name
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
