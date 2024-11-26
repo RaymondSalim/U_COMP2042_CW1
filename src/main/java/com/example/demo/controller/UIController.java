@@ -2,11 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.enums.GameState;
 import com.example.demo.observer.GameStateObservable;
-import com.example.demo.view.LevelSelect;
-import com.example.demo.view.MenuScreen;
-import com.example.demo.view.PauseMenu;
-import com.example.demo.view.Settings;
 import com.example.demo.view.base.NavigationHandler;
+import com.example.demo.view.screens.LevelSelect;
+import com.example.demo.view.screens.MenuScreen;
+import com.example.demo.view.screens.PauseMenu;
+import com.example.demo.view.screens.Settings;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

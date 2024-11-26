@@ -1,4 +1,4 @@
-package com.example.demo.view;
+package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
 import com.example.demo.enums.LevelType;
@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.example.demo.view.base.Constants.SHARED_RESOURCE_FOLDER;
-
 
 // TODO! Level Unlock Feature
 public class LevelSelect {

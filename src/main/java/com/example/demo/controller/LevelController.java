@@ -5,7 +5,7 @@ import com.example.demo.enums.LevelType;
 import com.example.demo.factory.LevelFactory;
 import com.example.demo.model.base.LevelParent;
 import com.example.demo.observer.GameStateObserver;
-import com.example.demo.view.PauseMenu;
+import com.example.demo.view.screens.PauseMenu;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;

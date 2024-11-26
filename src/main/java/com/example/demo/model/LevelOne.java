@@ -17,6 +17,6 @@ public class LevelOne extends LevelParent {
 
     @Override
     protected LevelView instantiateLevelView() {
-        return new com.example.demo.view.LevelOne(getRoot(), PLAYER_INITIAL_HEALTH);
+        return new com.example.demo.view.screens.LevelOne(getRoot(), PLAYER_INITIAL_HEALTH);
     }
 }

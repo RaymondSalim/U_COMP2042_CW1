@@ -6,11 +6,11 @@ import com.example.demo.enums.LevelType;
 import com.example.demo.model.Player;
 import com.example.demo.observer.GameStateObservable;
 import com.example.demo.observer.ScreenSizeObserver;
-import com.example.demo.view.EnemyPlane;
-import com.example.demo.view.UserPlane;
 import com.example.demo.view.base.ActiveActorDestructible;
 import com.example.demo.view.base.FighterPlane;
 import com.example.demo.view.base.LevelView;
+import com.example.demo.view.objects.EnemyPlane;
+import com.example.demo.view.objects.UserPlane;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class LevelParent extends GameStateObservable implements ScreenSizeObserver {
-    protected int TOTAL_ENEMIES = 5;
+    protected int MAX_ENEMIES_AT_A_TIME = 5;
     protected int KILLS_TO_ADVANCE;
     protected double ENEMY_SPAWN_PROBABILITY = .20;
     protected LevelType NEXT_LEVEL;
@@ -42,6 +42,8 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     private final List<ActiveActorDestructible> enemyProjectiles;
 
     private final LevelView levelView;
+
+    private int spawnedEnemies = 0;
 
     public LevelParent(String backgroundImageName, int playerInitialHealth) {
         this.root = new Group();
@@ -118,6 +120,8 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         this.player.reset();
         this.user.resetPosition();
         this.levelView.reset();
+
+        spawnedEnemies = 0;
 
         friendlyUnits.add(user);
         initializeFriendlyUnits();
@@ -217,12 +221,15 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     protected void spawnEnemyUnits() {
-        for (int i = 0; i < TOTAL_ENEMIES - enemyUnits.size(); i++) {
-            if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
+        for (int i = 0; i < MAX_ENEMIES_AT_A_TIME - enemyUnits.size(); i++) {
+            if (spawnedEnemies < KILLS_TO_ADVANCE && Math.random() < ENEMY_SPAWN_PROBABILITY) {
                 double newEnemyInitialYPosition = Math.random() * enemyMaximumYPosition;
                 ActiveActorDestructible newEnemy = new EnemyPlane(screenWidth, newEnemyInitialYPosition);
                 addEnemyUnit(newEnemy);
+                spawnedEnemies++;
             }
+
+            System.out.printf("KillCount: %d, Spawned: %d\n", player.getKillCount(), spawnedEnemies);
         }
     }
 
@@ -257,6 +264,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
                     // Check if enemy is destroyed
                     if (enemy.isDestroyed()) {
                         user.incrementKillCount();
+                        enemyUnits.remove(enemy);
                     }
                 }
             }
@@ -302,12 +310,17 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     private void handleEnemyPenetration() {
+        List<ActiveActorDestructible> toRemove = new ArrayList<>();
         for (ActiveActorDestructible enemy : enemyUnits) {
             if (enemyHasPenetratedDefenses(enemy)) {
+                toRemove.add(enemy);
                 user.takeDamage();
                 enemy.destroy();
+                root.getChildren().remove(enemy);
             }
         }
+
+        enemyUnits.removeAll(toRemove);
     }
 
     private void updateLevelView() {

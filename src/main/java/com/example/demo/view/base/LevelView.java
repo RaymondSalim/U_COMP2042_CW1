@@ -1,7 +1,7 @@
 package com.example.demo.view.base;
 
-import com.example.demo.view.HeartDisplay;
 import com.example.demo.view.RollingBackground;
+import com.example.demo.view.objects.HeartDisplay;
 import javafx.scene.Group;
 
 public abstract class LevelView {
@@ -11,7 +11,7 @@ public abstract class LevelView {
     private final Group root;
     private final HeartDisplay heartDisplay;
     private RollingBackground rollingBackground;
-
+    // TODO! Implement rolling background
 
     public LevelView(Group root, int heartsToDisplay) {
         this.root = root;
