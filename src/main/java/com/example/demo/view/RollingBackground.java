@@ -4,22 +4,18 @@ import com.example.demo.context.AppContext;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RollingBackground {
-    private final Stage stage;
+public class RollingBackground extends Group {
     private final List<ImageView> backgrounds;
     private final Timeline timeline;
 
-    public RollingBackground(Stage stage, Image... images) {
-        this.stage = stage;
+    public RollingBackground(Image... images) {
         this.backgrounds = new ArrayList<>();
 
         AppContext context = AppContext.getInstance();
@@ -29,15 +25,14 @@ public class RollingBackground {
             ImageView background = new ImageView(image);
             background.setPreserveRatio(true);
             background.setFitHeight(context.getScreenHeight());
+            double imageWidth = image.getWidth() * (context.getScreenHeight() / image.getHeight());
+            background.setFitWidth(imageWidth);
             background.setLayoutX(initialX);
-            initialX += background.getFitWidth();
+            initialX += imageWidth;  // Use the calculated width instead of getFitWidth()
             backgrounds.add(background);
         }
 
-        Group root = new Group();
-        root.getChildren().addAll(backgrounds);
-        Scene scene = new Scene(root, context.getScreenWidth(), context.getScreenHeight());
-        stage.setScene(scene);
+        this.getChildren().addAll(backgrounds);
 
         timeline = new Timeline(new KeyFrame(Duration.millis(20), e -> updateBackground()));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -60,11 +55,23 @@ public class RollingBackground {
     }
 
     public void start() {
-        stage.show();
         timeline.play();
     }
 
     public void stop() {
         timeline.stop();
+    }
+
+    public void restart() {
+        timeline.stop();
+
+        // Reset the positions of all backgrounds
+        double initialX = 0;
+        for (ImageView background : backgrounds) {
+            background.setLayoutX(initialX);
+            initialX += background.getFitWidth();
+        }
+
+        timeline.play();
     }
 }

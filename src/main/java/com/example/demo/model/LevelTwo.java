@@ -11,7 +11,7 @@ public class LevelTwo extends LevelParent {
     private final Boss boss;
 
     public LevelTwo() {
-        super(BACKGROUND_IMAGE_NAME, PLAYER_INITIAL_HEALTH);
+        super(PLAYER_INITIAL_HEALTH);
         boss = new Boss();
     }
 

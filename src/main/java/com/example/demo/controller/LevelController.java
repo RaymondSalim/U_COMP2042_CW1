@@ -41,6 +41,7 @@ public class LevelController implements GameStateObserver {
     @Override
     public void onGameOver() {
         this.gameTimeline.pause();
+        this.currentLevel.pause();
         this.uiController.showGameOverOverlay();
     }
 
@@ -53,6 +54,7 @@ public class LevelController implements GameStateObserver {
     @Override
     public void onLevelComplete() {
         this.gameTimeline.pause();
+        this.currentLevel.pause();
         uiController.showLevelCompleteOverlay();
     }
 
@@ -132,6 +134,7 @@ public class LevelController implements GameStateObserver {
         if (gameTimeline != null) {
             gameTimeline.pause();
             pauseMenu.show();
+            currentLevel.pause();
         }
     }
 
@@ -139,6 +142,7 @@ public class LevelController implements GameStateObserver {
         if (gameTimeline != null) {
             gameTimeline.play();
             pauseMenu.hide();
+            currentLevel.resume();
         }
     }
 

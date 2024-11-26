@@ -12,8 +12,6 @@ import com.example.demo.view.base.LevelView;
 import com.example.demo.view.objects.EnemyPlane;
 import com.example.demo.view.objects.UserPlane;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     private final Group root;
     private final UserPlane user;
-    private final ImageView background;
 
     private final Player player;
     private final List<ActiveActorDestructible> friendlyUnits;
@@ -45,7 +42,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     private int spawnedEnemies = 0;
 
-    public LevelParent(String backgroundImageName, int playerInitialHealth) {
+    public LevelParent(int playerInitialHealth) {
         this.root = new Group();
         root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
         root.layoutYProperty().addListener((obs, oldVal, newVal) -> root.setLayoutY(0));
@@ -54,7 +51,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         this.screenHeight = context.getScreenHeight();
         this.screenWidth = context.getScreenWidth();
 
-        this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
         this.enemyMaximumYPosition = screenHeight - BOTTOM_MARGIN;
         this.levelView = instantiateLevelView();
         initializeBackground();
@@ -78,12 +74,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         this.screenWidth = newWidth;
 
         this.enemyMaximumYPosition = this.screenHeight - BOTTOM_MARGIN;
-
-        root.getChildren().remove(background);
-        background.setFitHeight(this.screenHeight);
-        background.setFitWidth(this.screenWidth);
-        root.getChildren().add(0, background);
-
         repositionOutOfBoundsActors();
     }
 
@@ -189,20 +179,17 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     private void initializeBackground() {
-        background.setFocusTraversable(true);
-        background.setFitHeight(screenHeight);
-        background.setFitWidth(screenWidth);
-        background.setOnKeyPressed(e -> {
+        root.setFocusTraversable(true);
+        root.setOnKeyPressed(e -> {
             KeyCode kc = e.getCode();
             if (kc == KeyCode.UP) user.moveUp();
             if (kc == KeyCode.DOWN) user.moveDown();
             if (kc == KeyCode.SPACE) fireProjectile();
         });
-        background.setOnKeyReleased(e -> {
+        root.setOnKeyReleased(e -> {
             KeyCode kc = e.getCode();
             if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stop();
         });
-        root.getChildren().add(background);
     }
 
     private void fireProjectile() {
@@ -312,7 +299,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
             if (enemyHasPenetratedDefenses(enemy)) {
                 user.takeDamage();
                 enemy.destroy();
-//                actorsToRemove.add(enemy);
             }
         }
     }
@@ -324,5 +310,13 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     protected void addEnemyUnit(ActiveActorDestructible enemy) {
         enemyUnits.add(enemy);
         root.getChildren().add(enemy);
+    }
+
+    public void pause() {
+        this.levelView.pause();
+    }
+
+    public void resume() {
+        this.levelView.resume();
     }
 }
