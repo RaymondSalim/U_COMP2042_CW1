@@ -5,6 +5,7 @@ import com.example.demo.enums.LevelType;
 import com.example.demo.factory.LevelFactory;
 import com.example.demo.model.base.LevelParent;
 import com.example.demo.observer.GameStateObserver;
+import com.example.demo.view.screens.GameOver;
 import com.example.demo.view.screens.PauseMenu;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -18,6 +19,7 @@ public class LevelController implements GameStateObserver {
     private final Stage stage;
     private final UIController uiController;
     private PauseMenu pauseMenu;
+    private GameOver gameOverOverlay;
 
     private LevelParent currentLevel;
     private Timeline gameTimeline;
@@ -28,6 +30,7 @@ public class LevelController implements GameStateObserver {
         this.uiController.addGameStateObserver(this);
 
         this.initializePauseMenu();
+        this.initializeGameOverOverlay();
     }
 
     @Override
@@ -82,6 +85,19 @@ public class LevelController implements GameStateObserver {
         uiController.setPauseMenu(pauseMenu);
     }
 
+    private void initializeGameOverOverlay() {
+        gameOverOverlay = new GameOver(
+                this::onLevelRestart,
+                () -> {
+                    // Settings button action
+                    gameTimeline.pause();
+                    pauseMenu.hide();
+                    uiController.showLevelSelectScreen();
+                }
+        );
+        uiController.setGameOver(gameOverOverlay);
+    }
+
     public void goToLevel(LevelType levelType) {
         currentLevel = LevelFactory.createLevel(levelType);
         currentLevel.addGameStateObserver(this);
@@ -109,6 +125,7 @@ public class LevelController implements GameStateObserver {
         gameTimeline.play();
         pauseMenu.hide();
         uiController.hideLevelCompleteOverlay();
+        uiController.hideGameOverOverlay();
     }
 
     public void pauseGame() {

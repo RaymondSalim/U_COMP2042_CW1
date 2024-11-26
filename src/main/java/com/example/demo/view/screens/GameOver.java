@@ -2,20 +2,20 @@ package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
 import com.example.demo.observer.ScreenSizeObserver;
+import com.example.demo.view.base.Constants;
 import com.example.demo.view.base.ImageButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
-public class PauseMenu implements ScreenSizeObserver {
-    private final String BG_IMAGE = "/com/example/demo/images/pauseMenu/pauseWindow.png";
-    private final VBox menu;
+public class GameOver implements ScreenSizeObserver {
+    private final String BG_IMAGE = "/com/example/demo/images/gameOverMenu/gameOverWindow.png";
 
-    private final Image bgImageFile;
+    private VBox menu;
+    private Image bgImageFile;
 
-    public PauseMenu(
-            Runnable onResume,
+    public GameOver(
             Runnable onRestart,
             Runnable onLevelSelect
     ) {
@@ -41,30 +41,25 @@ public class PauseMenu implements ScreenSizeObserver {
                 new BackgroundSize(100, 65, true, true, true, false)
         );
 
-        HBox buttonsPane = new HBox(10);
+        HBox buttonsPane = new HBox(25);
         buttonsPane.setAlignment(Pos.CENTER);
         buttonsPane.prefWidthProperty().bind(menu.widthProperty());
 
-        ImageButton levelSelectButton = new ImageButton("/com/example/demo/images/shared/levelSelectButton.png");
-        ImageButton restartButton = new ImageButton("/com/example/demo/images/shared/restartButton.png");
-        ImageButton resumeButton = new ImageButton("/com/example/demo/images/shared/playButton.png");
+        ImageButton restartButton = new ImageButton(Constants.SHARED_RESOURCE_FOLDER + "/restartButton.png");
+        ImageButton levelSelectButton = new ImageButton(Constants.SHARED_RESOURCE_FOLDER + "/levelSelectButton.png");
 
-        resumeButton.setOnMouseClicked(event -> onResume.run());
+        restartButton.setPreserveRatio(true);
+        levelSelectButton.setPreserveRatio(true);
+        restartButton.fitWidthProperty().bind(menu.widthProperty().divide(3).subtract(25));
+        levelSelectButton.fitWidthProperty().bind(menu.widthProperty().divide(3).subtract(25));
+
         levelSelectButton.setOnMouseClicked(event -> onLevelSelect.run());
         restartButton.setOnMouseClicked(event -> {
             menu.setVisible(false);
             onRestart.run();
         });
 
-        buttonsPane.getChildren().addAll(levelSelectButton, restartButton, resumeButton);
-
-        // Bind button widths to fit evenly within buttonsPane
-        double buttonSpacingFactor = 1.0 / buttonsPane.getChildren().size();
-        buttonsPane.getChildren().forEach(button -> {
-            ImageButton imageButton = (ImageButton) button;
-            imageButton.fitWidthProperty().bind(buttonsPane.widthProperty().multiply(buttonSpacingFactor).subtract(20));
-            imageButton.fitHeightProperty().bind(imageButton.fitWidthProperty().multiply(imageButton.getImage().getHeight() / imageButton.getImage().getWidth()));
-        });
+        buttonsPane.getChildren().addAll(restartButton, levelSelectButton);
 
         // Make sure buttons are at the bottom
         Region spacer = new Region();

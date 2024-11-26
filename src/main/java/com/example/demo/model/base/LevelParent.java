@@ -155,8 +155,10 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         handleEnemyPenetration();
         handleUserProjectileCollisions();
         handleEnemyProjectileCollisions();
+        handleCollisions(userProjectiles, enemyProjectiles);
         handlePlaneCollisions();
         removeAllDestroyedActors();
+
         updateLevelView();
         checkPlayerHealth();
         checkKillCount();
@@ -228,8 +230,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
                 addEnemyUnit(newEnemy);
                 spawnedEnemies++;
             }
-
-            System.out.printf("KillCount: %d, Spawned: %d\n", player.getKillCount(), spawnedEnemies);
         }
     }
 
@@ -264,7 +264,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
                     // Check if enemy is destroyed
                     if (enemy.isDestroyed()) {
                         user.incrementKillCount();
-                        enemyUnits.remove(enemy);
                     }
                 }
             }
@@ -286,7 +285,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
             }
         }
 
-        handleCollisions(userProjectiles, enemyProjectiles);
     }
 
     private void handleEnemyProjectileCollisions() {
@@ -310,17 +308,13 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     private void handleEnemyPenetration() {
-        List<ActiveActorDestructible> toRemove = new ArrayList<>();
         for (ActiveActorDestructible enemy : enemyUnits) {
             if (enemyHasPenetratedDefenses(enemy)) {
-                toRemove.add(enemy);
                 user.takeDamage();
                 enemy.destroy();
-                root.getChildren().remove(enemy);
+//                actorsToRemove.add(enemy);
             }
         }
-
-        enemyUnits.removeAll(toRemove);
     }
 
     private void updateLevelView() {
