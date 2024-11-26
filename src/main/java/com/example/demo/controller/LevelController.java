@@ -5,6 +5,7 @@ import com.example.demo.enums.LevelType;
 import com.example.demo.factory.LevelFactory;
 import com.example.demo.model.base.LevelParent;
 import com.example.demo.observer.GameStateObserver;
+import com.example.demo.view.PauseMenu;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import javafx.util.Duration;
 public class LevelController implements GameStateObserver {
     private final Stage stage;
     private final UIController uiController;
+    private PauseMenu pauseMenu;
 
     private LevelParent currentLevel;
     private Timeline gameTimeline;
@@ -24,6 +26,8 @@ public class LevelController implements GameStateObserver {
         this.stage = stage;
         this.uiController = uiController;
         this.uiController.addGameStateObserver(this);
+
+        this.initializePauseMenu();
     }
 
     @Override
@@ -64,6 +68,20 @@ public class LevelController implements GameStateObserver {
         // TODO! Stop game, show credits
     }
 
+    private void initializePauseMenu() {
+        pauseMenu = new PauseMenu(
+                this::resumeGame, // Resume button action
+                this::onLevelRestart,
+                () -> {
+                    // Settings button action
+                    gameTimeline.pause();
+                    pauseMenu.hide();
+                    uiController.showLevelSelectScreen();
+                }
+        );
+        uiController.setPauseMenu(pauseMenu);
+    }
+
     public void goToLevel(LevelType levelType) {
         currentLevel = LevelFactory.createLevel(levelType);
         currentLevel.addGameStateObserver(this);
@@ -89,21 +107,21 @@ public class LevelController implements GameStateObserver {
             gameTimeline.setCycleCount(Timeline.INDEFINITE);
         }
         gameTimeline.play();
-        uiController.hidePauseOverlay();
+        pauseMenu.hide();
         uiController.hideLevelCompleteOverlay();
     }
 
     public void pauseGame() {
         if (gameTimeline != null) {
             gameTimeline.pause();
-            uiController.showPauseOverlay();
+            pauseMenu.show();
         }
     }
 
     public void resumeGame() {
         if (gameTimeline != null) {
             gameTimeline.play();
-            uiController.hidePauseOverlay();
+            pauseMenu.hide();
         }
     }
 
@@ -119,7 +137,7 @@ public class LevelController implements GameStateObserver {
     // Set key handler to listen for "P" key to pause/resume the game
     private void setPauseKeyHandler(Scene scene) {
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.P) {
+            if (event.getCode() == KeyCode.P || event.getCode() == KeyCode.ESCAPE) {
                 togglePause();
             }
         });
