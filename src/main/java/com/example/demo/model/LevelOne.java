@@ -12,6 +12,7 @@ public class LevelOne extends LevelParent {
 
         super.NEXT_LEVEL = LevelType.LEVEL_TWO;
         super.KILLS_TO_ADVANCE = 20;
+        super.MAX_ENEMY_SPAWN = 20;
     }
 
     @Override

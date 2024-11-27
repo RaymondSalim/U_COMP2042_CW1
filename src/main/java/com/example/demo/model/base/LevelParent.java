@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 
 public abstract class LevelParent extends GameStateObservable implements ScreenSizeObserver {
     protected int MAX_ENEMIES_AT_A_TIME = 5;
-    protected int KILLS_TO_ADVANCE;
+    protected int KILLS_TO_ADVANCE; // TODO! Replace with scoring system
+    protected int MAX_ENEMY_SPAWN;
     protected double ENEMY_SPAWN_PROBABILITY = .20;
     protected LevelType NEXT_LEVEL;
 
@@ -200,9 +201,10 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     protected void spawnEnemyUnits() {
-        int enemiesToSpawn = MAX_ENEMIES_AT_A_TIME - enemyUnits.size();
+        int enemiesToSpawn = Math.min(MAX_ENEMIES_AT_A_TIME - enemyUnits.size(), MAX_ENEMY_SPAWN - spawnedEnemies);
+
         for (int i = 0; i < enemiesToSpawn; i++) {
-            if (spawnedEnemies < KILLS_TO_ADVANCE && Math.random() < ENEMY_SPAWN_PROBABILITY) {
+            if (spawnedEnemies < MAX_ENEMY_SPAWN && Math.random() < ENEMY_SPAWN_PROBABILITY) {
                 double newEnemyYPos = Math.random() * enemyMaximumYPosition;
                 ActiveActorDestructible newEnemy = new EnemyPlane(screenWidth, newEnemyYPos);
                 addEnemyUnit(newEnemy);
