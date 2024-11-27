@@ -14,7 +14,7 @@ public class UserPlane extends FighterPlane implements ScreenSizeObserver {
     private static final double INITIAL_X_POSITION = 5.0;
     private static double INITIAL_Y_POSITION = 300.0;
     private static final int IMAGE_HEIGHT = 150;
-    private static final int VERTICAL_VELOCITY = 8;
+    private static final int VERTICAL_VELOCITY = 80;
     private static final int PROJECTILE_X_POSITION = 110;
     private static final int PROJECTILE_Y_POSITION_OFFSET = 20;
 
@@ -44,10 +44,10 @@ public class UserPlane extends FighterPlane implements ScreenSizeObserver {
     }
 
     @Override
-    public void updatePosition() {
+    public void updatePosition(double deltaTime) {
         if (isMoving()) {
             double initialTranslateY = getTranslateY();
-            this.moveVertically(VERTICAL_VELOCITY * velocityMultiplier);
+            this.moveVertically(VERTICAL_VELOCITY * velocityMultiplier * deltaTime);
             double newPosition = getLayoutY() + getTranslateY();
             if (newPosition < Y_UPPER_BOUND || newPosition > Y_LOWER_BOUND) {
                 this.setTranslateY(initialTranslateY);
@@ -62,11 +62,6 @@ public class UserPlane extends FighterPlane implements ScreenSizeObserver {
                 setTranslateY(Y_LOWER_BOUND - getLayoutY());
             }
         }
-    }
-
-    @Override
-    public void updateActor() {
-        updatePosition();
     }
 
     @Override

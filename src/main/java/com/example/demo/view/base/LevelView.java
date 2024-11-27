@@ -52,12 +52,12 @@ public abstract class LevelView {
         root.getChildren().remove(actor);
     }
 
-    public void updateActor(ActiveActorDestructible actor) {
+    public void updateActor(ActiveActorDestructible actor, double deltaTime) {
         if (actor.isDestroyed()) {
             removeActor(actor);
         } else {
             // Ensure the actor's position or state is synchronized with the model.
-            actor.updateVisual();
+            actor.updateVisual(deltaTime);
         }
     }
 

@@ -131,7 +131,7 @@ public class LevelController implements GameStateObserver {
                 long currentTime = System.nanoTime();
                 if (lastUpdateTime > 0) {
                     double deltaTime = (currentTime - lastUpdateTime) / 1_000_000_000.0; // Convert nanoseconds to seconds
-                    updateGame(/*deltaTime*/);
+                    updateGame(deltaTime);
                 }
                 lastUpdateTime = currentTime;
             }));
@@ -139,9 +139,9 @@ public class LevelController implements GameStateObserver {
         }
     }
 
-    private void updateGame() {
-        currentLevel.updateScene();
-        currentLevel.updateView(currentLevelView);
+    private void updateGame(double deltaTime) {
+        currentLevel.updateScene(deltaTime);
+        currentLevel.updateView(currentLevelView, deltaTime);
     }
 
     public void startGame() {

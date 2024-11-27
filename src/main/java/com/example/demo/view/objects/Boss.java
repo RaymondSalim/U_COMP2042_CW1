@@ -16,7 +16,7 @@ public class Boss extends FighterPlane {
     private static final double BOSS_FIRE_RATE = .04;
     private static final double BOSS_SHIELD_PROBABILITY = .002;
     private static final int IMAGE_HEIGHT = 300;
-    private static final int VERTICAL_VELOCITY = 8;
+    private static final int VERTICAL_VELOCITY = 80;
     private static final int HEALTH = 100;
     private static final int MOVE_FREQUENCY_PER_CYCLE = 5;
     private static final int ZERO = 0;
@@ -41,9 +41,9 @@ public class Boss extends FighterPlane {
     }
 
     @Override
-    public void updatePosition() {
+    public void updatePosition(double deltaTime) {
         double initialTranslateY = getTranslateY();
-        moveVertically(getNextMove());
+        moveVertically(getNextMove() * deltaTime);
         double currentPosition = getLayoutY() + getTranslateY();
         if (currentPosition < Y_POSITION_UPPER_BOUND || currentPosition > Y_POSITION_LOWER_BOUND) {
             setTranslateY(initialTranslateY);
@@ -51,8 +51,8 @@ public class Boss extends FighterPlane {
     }
 
     @Override
-    public void updateActor() {
-        updatePosition();
+    public void updateActor(double deltaTime) {
+        updatePosition(deltaTime);
         updateShield();
     }
 

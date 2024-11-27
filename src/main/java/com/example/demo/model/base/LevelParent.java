@@ -143,9 +143,9 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         return NEXT_LEVEL;
     }
 
-    public void updateScene() {
+    public void updateScene(double deltaTime) {
         spawnEnemyUnits();
-        updateActors();
+        updateActors(deltaTime);
         generateEnemyFire();
         handleEnemyPenetration();
         handleUserProjectileCollisions();
@@ -214,7 +214,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         }
     }
 
-    private void spawnEnemyUnits() {
+    protected void spawnEnemyUnits() {
         int enemiesToSpawn = MAX_ENEMIES_AT_A_TIME - enemyUnits.size();
         for (int i = 0; i < enemiesToSpawn; i++) {
             if (spawnedEnemies < KILLS_TO_ADVANCE && Math.random() < ENEMY_SPAWN_PROBABILITY) {
@@ -226,11 +226,11 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         }
     }
 
-    private void updateActors() {
-        friendlyUnits.forEach(actor -> actor.updateActor());
-        enemyUnits.forEach(actor -> actor.updateActor());
-        userProjectiles.forEach(actor -> actor.updateActor());
-        enemyProjectiles.forEach(actor -> actor.updateActor());
+    private void updateActors(double deltaTime) {
+        friendlyUnits.forEach(actor -> actor.updateActor(deltaTime));
+        enemyUnits.forEach(actor -> actor.updateActor(deltaTime));
+        userProjectiles.forEach(actor -> actor.updateActor(deltaTime));
+        enemyProjectiles.forEach(actor -> actor.updateActor(deltaTime));
     }
 
     private void removeAllDestroyedActors() {
@@ -341,11 +341,11 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         user.stop();
     }
 
-    public void updateView(LevelView levelView) {
-        friendlyUnits.forEach(levelView::updateActor);
-        enemyUnits.forEach(levelView::updateActor);
-        userProjectiles.forEach(levelView::updateActor);
-        enemyProjectiles.forEach(levelView::updateActor);
+    public void updateView(LevelView levelView, double deltaTime) {
+        friendlyUnits.forEach(u -> levelView.updateActor(u, deltaTime));
+        enemyUnits.forEach(u -> levelView.updateActor(u, deltaTime));
+        userProjectiles.forEach(u -> levelView.updateActor(u, deltaTime));
+        enemyProjectiles.forEach(u -> levelView.updateActor(u, deltaTime));
 
         levelView.updateHealth(player.getHealth());
     }
