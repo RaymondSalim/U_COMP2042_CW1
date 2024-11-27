@@ -235,13 +235,15 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     private void handlePlaneCollisions() {
         for (ActiveActorDestructible friendly : friendlyUnits) {
             for (ActiveActorDestructible enemy : enemyUnits) {
-                if (friendly.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                    friendly.takeDamage();
-                    enemy.takeDamage();
+                if (!friendly.isDestroyed() && !enemy.isDestroyed()) {
+                    if (friendly.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                        friendly.takeDamage();
+                        enemy.takeDamage();
 
-                    // Check if enemy is destroyed
-                    if (enemy.isDestroyed()) {
-                        user.incrementKillCount();
+                        // Check if enemy is destroyed
+                        if (enemy.isDestroyed()) {
+                            user.incrementKillCount();
+                        }
                     }
                 }
             }
@@ -251,13 +253,15 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     private void handleUserProjectileCollisions() {
         for (ActiveActorDestructible projectile : userProjectiles) {
             for (ActiveActorDestructible enemy : enemyUnits) {
-                if (projectile.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                    projectile.takeDamage();
-                    enemy.takeDamage();
+                if (!projectile.isDestroyed() && !enemy.isDestroyed()) {
+                    if (projectile.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                        projectile.takeDamage();
+                        enemy.takeDamage();
 
-                    // Check if enemy is destroyed
-                    if (enemy.isDestroyed()) {
-                        user.incrementKillCount();
+                        // Check if enemy is destroyed
+                        if (enemy.isDestroyed()) {
+                            user.incrementKillCount();
+                        }
                     }
                 }
             }
@@ -273,9 +277,11 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
                                   List<ActiveActorDestructible> actors2) {
         for (ActiveActorDestructible actor : actors2) {
             for (ActiveActorDestructible otherActor : actors1) {
-                if (actor.getBoundsInParent().intersects(otherActor.getBoundsInParent())) {
-                    actor.takeDamage();
-                    otherActor.takeDamage();
+                if (!actor.isDestroyed() && !otherActor.isDestroyed()) {
+                    if (actor.getBoundsInParent().intersects(otherActor.getBoundsInParent())) {
+                        actor.takeDamage();
+                        otherActor.takeDamage();
+                    }
                 }
             }
         }
