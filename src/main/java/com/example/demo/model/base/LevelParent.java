@@ -13,7 +13,6 @@ import com.example.demo.view.base.LevelView;
 import com.example.demo.view.objects.EnemyPlane;
 import com.example.demo.view.objects.UserPlane;
 import javafx.scene.Group;
-import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
         this.enemyMaximumYPosition = screenHeight - BOTTOM_MARGIN;
         this.levelView = instantiateLevelView();
-        initializeBackground();
 
         this.friendlyUnits = new ArrayList<>();
         this.enemyUnits = new ArrayList<>();
@@ -106,6 +104,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     public void resetLevel() {
         removeAllActors();
+        this.levelView.reset();
 
         this.friendlyUnits.clear();
         this.enemyUnits.clear();
@@ -181,20 +180,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     private void initializeFriendlyUnits() {
         this.root.getChildren().addAll(this.user);
-    }
-
-    private void initializeBackground() {
-        root.setFocusTraversable(true);
-        root.setOnKeyPressed(e -> {
-            KeyCode kc = e.getCode();
-            if (kc == KeyCode.UP) user.moveUp();
-            if (kc == KeyCode.DOWN) user.moveDown();
-            if (kc == KeyCode.SPACE) fireProjectile();
-        });
-        root.setOnKeyReleased(e -> {
-            KeyCode kc = e.getCode();
-            if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stop();
-        });
     }
 
     private void fireProjectile() {
