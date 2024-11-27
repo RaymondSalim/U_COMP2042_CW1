@@ -14,6 +14,6 @@ public class LevelOne extends LevelView {
         Image backgroundImage = new Image(getClass().getResource(BACKGROUND_IMAGE_NAME_1).toExternalForm());
         Image backgroundImage2 = new Image(getClass().getResource(BACKGROUND_IMAGE_NAME_2).toExternalForm());
 
-        this.initializeRollingBackground(backgroundImage, backgroundImage2);
+        this.initializeBackground(backgroundImage, backgroundImage2);
     }
 }

@@ -87,6 +87,15 @@ public class UIController extends GameStateObservable {
         levelCompleteOverlay.setVisible(false);
     }
 
+    public void showGameWinScreen() {
+        // TODO!
+    }
+
+    public void hideOverlays() {
+        hideLevelCompleteOverlay();
+        hideGameOverOverlay();
+    }
+
     private StackPane createLevelCompleteOverlay() {
         VBox overlayContent = new VBox(10);
         overlayContent.setAlignment(Pos.CENTER);

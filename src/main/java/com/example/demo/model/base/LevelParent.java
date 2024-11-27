@@ -1,6 +1,7 @@
 package com.example.demo.model.base;
 
 import com.example.demo.context.AppContext;
+import com.example.demo.enums.Direction;
 import com.example.demo.enums.GameState;
 import com.example.demo.enums.LevelType;
 import com.example.demo.model.Player;
@@ -38,10 +39,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     private final List<ActiveActorDestructible> userProjectiles;
     private final List<ActiveActorDestructible> enemyProjectiles;
 
-    private final LevelView levelView;
-
-    private int spawnedEnemies = 0;
-
     public LevelParent(int playerInitialHealth) {
         this.root = new Group();
         root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
@@ -63,9 +60,17 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         this.player = new Player(playerInitialHealth);
         this.user = new UserPlane(player);
 
-        levelView.showHeartDisplay();
+        levelView.initializeHeartDisplay();
         friendlyUnits.add(user);
         initializeFriendlyUnits();
+    }
+
+    private final LevelView levelView;
+
+    private int spawnedEnemies = 0;
+
+    public LevelView getLevelView() {
+        return levelView;
     }
 
     @Override
@@ -209,11 +214,12 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         }
     }
 
-    protected void spawnEnemyUnits() {
-        for (int i = 0; i < MAX_ENEMIES_AT_A_TIME - enemyUnits.size(); i++) {
+    private void spawnEnemyUnits() {
+        int enemiesToSpawn = MAX_ENEMIES_AT_A_TIME - enemyUnits.size();
+        for (int i = 0; i < enemiesToSpawn; i++) {
             if (spawnedEnemies < KILLS_TO_ADVANCE && Math.random() < ENEMY_SPAWN_PROBABILITY) {
-                double newEnemyInitialYPosition = Math.random() * enemyMaximumYPosition;
-                ActiveActorDestructible newEnemy = new EnemyPlane(screenWidth, newEnemyInitialYPosition);
+                double newEnemyYPos = Math.random() * enemyMaximumYPosition;
+                ActiveActorDestructible newEnemy = new EnemyPlane(screenWidth, newEnemyYPos);
                 addEnemyUnit(newEnemy);
                 spawnedEnemies++;
             }
@@ -221,10 +227,10 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     private void updateActors() {
-        friendlyUnits.forEach(plane -> plane.updateActor());
-        enemyUnits.forEach(enemy -> enemy.updateActor());
-        userProjectiles.forEach(projectile -> projectile.updateActor());
-        enemyProjectiles.forEach(projectile -> projectile.updateActor());
+        friendlyUnits.forEach(actor -> actor.updateActor());
+        enemyUnits.forEach(actor -> actor.updateActor());
+        userProjectiles.forEach(actor -> actor.updateActor());
+        enemyProjectiles.forEach(actor -> actor.updateActor());
     }
 
     private void removeAllDestroyedActors() {
@@ -304,7 +310,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     private void updateLevelView() {
-        levelView.removeHearts(player.getHealth());
+        levelView.updateHealth(player.getHealth());
     }
 
     protected void addEnemyUnit(ActiveActorDestructible enemy) {
@@ -318,5 +324,29 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     public void resume() {
         this.levelView.resume();
+    }
+
+    public void moveUserPlane(Direction direction) {
+        switch (direction) {
+            case UP -> user.moveUp();
+            case DOWN -> user.moveDown();
+        }
+    }
+
+    public void userFireProjectile() {
+        fireProjectile();
+    }
+
+    public void stopUserPlane() {
+        user.stop();
+    }
+
+    public void updateView(LevelView levelView) {
+        friendlyUnits.forEach(levelView::updateActor);
+        enemyUnits.forEach(levelView::updateActor);
+        userProjectiles.forEach(levelView::updateActor);
+        enemyProjectiles.forEach(levelView::updateActor);
+
+        levelView.updateHealth(player.getHealth());
     }
 }

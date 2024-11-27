@@ -42,13 +42,28 @@ public class HeartDisplay {
         this.initializeHearts();
     }
 
-    public void removeHeart() {
-        if (!container.getChildren().isEmpty())
-            container.getChildren().remove(INDEX_OF_FIRST_ITEM);
-    }
-
     public HBox getContainer() {
         return container;
     }
 
+    public void setHearts(int currentHearts) {
+        int currentDisplayedHearts = container.getChildren().size();
+
+        if (currentHearts > currentDisplayedHearts) {
+            // Add missing hearts
+            int heartsToAdd = currentHearts - currentDisplayedHearts;
+            for (int i = 0; i < heartsToAdd; i++) {
+                ImageView heart = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
+                heart.setFitHeight(HEART_HEIGHT);
+                heart.setPreserveRatio(true);
+                container.getChildren().add(heart);
+            }
+        } else if (currentHearts < currentDisplayedHearts) {
+            // Remove excess hearts
+            int heartsToRemove = currentDisplayedHearts - currentHearts;
+            for (int i = 0; i < heartsToRemove; i++) {
+                container.getChildren().remove(INDEX_OF_FIRST_ITEM);
+            }
+        }
+    }
 }

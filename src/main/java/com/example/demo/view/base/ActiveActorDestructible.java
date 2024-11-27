@@ -30,4 +30,16 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
         this.isDestroyed = isDestroyed;
     }
 
+    public void updateVisual() {
+        // If the actor is destroyed, make it invisible
+        if (isDestroyed()) {
+            this.setVisible(false);
+        } else {
+            // Ensure visibility if not destroyed
+            this.setVisible(true);
+
+            // Update position based on current logical state
+            updatePosition();
+        }
+    }
 }
