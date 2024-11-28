@@ -11,20 +11,21 @@ public class LevelOne extends LevelParent {
         super(PLAYER_INITIAL_HEALTH);
 
         super.NEXT_LEVEL = LevelType.LEVEL_TWO;
-        super.MAX_ENEMY_SPAWN = 20;
+        super.MAX_ENEMY_SPAWN = 5;
+        super.MAX_ENEMIES_AT_A_TIME = 2;
     }
 
     @Override
     protected int calculateStars(int score) {
-        if (score < 1500) {
+        if (score < 300) {
             return 0;
         }
 
-        if (score < 1900) {
+        if (score == 300) {
             return 1;
         }
 
-        if (score < 2000) {
+        if (score <= 400) {
             return 2;
         }
 
@@ -33,6 +34,6 @@ public class LevelOne extends LevelParent {
 
     @Override
     protected LevelView instantiateLevelView() {
-        return new com.example.demo.view.screens.LevelOne(getRoot(), PLAYER_INITIAL_HEALTH);
+        return new com.example.demo.view.screens.levels.LevelOne(getRoot(), PLAYER_INITIAL_HEALTH);
     }
 }
