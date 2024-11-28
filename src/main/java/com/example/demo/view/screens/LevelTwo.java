@@ -15,6 +15,5 @@ public class LevelTwo extends LevelView {
         Image backgroundImage2 = new Image(getClass().getResource(BACKGROUND_IMAGE_NAME_2).toExternalForm());
 
         this.initializeBackground(backgroundImage, backgroundImage2);
-
     }
 }
