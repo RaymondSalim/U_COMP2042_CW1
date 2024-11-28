@@ -1,69 +1,69 @@
 package com.example.demo.view.objects;
 
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 public class HeartDisplay {
 
     private static final String HEART_IMAGE_NAME = "/com/example/demo/images/heart.png";
     private static final int HEART_HEIGHT = 50;
-    private static final int INDEX_OF_FIRST_ITEM = 0;
-    private HBox container;
+    private static final int TEXT_FONT_SIZE = 24; // Increased font size
+    private static final int GAP_BETWEEN_HEART_AND_TEXT = 10; // Gap between heart and text
+
+    private final HBox container;
     private final double containerXPosition;
     private final double containerYPosition;
-    private final int numberOfHeartsToDisplay;
+
+    private final ImageView heartIcon; // Single heart image
+    private final Label heartLabel;   // Label to show "x N"
+
+    private int heartAmount;
 
     public HeartDisplay(double xPosition, double yPosition, int heartsToDisplay) {
         this.containerXPosition = xPosition;
         this.containerYPosition = yPosition;
-        this.numberOfHeartsToDisplay = heartsToDisplay;
+        this.heartAmount = heartsToDisplay;
+
+        // Initialize components
+        this.container = new HBox(GAP_BETWEEN_HEART_AND_TEXT); // Set gap between heart and text
+        this.heartIcon = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
+        this.heartLabel = new Label();
+
         initializeContainer();
-        initializeHearts();
+        setHearts(heartAmount);
     }
 
     private void initializeContainer() {
-        container = new HBox();
         container.setLayoutX(containerXPosition);
         container.setLayoutY(containerYPosition);
-    }
 
-    private void initializeHearts() {
-        for (int i = 0; i < numberOfHeartsToDisplay; i++) {
-            ImageView heart = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
+        // Configure the heart icon
+        heartIcon.setFitHeight(HEART_HEIGHT);
+        heartIcon.setPreserveRatio(true);
 
-            heart.setFitHeight(HEART_HEIGHT);
-            heart.setPreserveRatio(true);
-            container.getChildren().add(heart);
-        }
+        // Configure the label
+        Font font = Font.loadFont(getClass().getResource("/com/example/demo/fonts/Audiowide/Audiowide.ttf").toExternalForm(), TEXT_FONT_SIZE);
+        heartLabel.setFont(font);
+        heartLabel.setTextAlignment(TextAlignment.CENTER);
+        heartLabel.setStyle("-fx-text-fill: white; -fx-padding: 4px 0 0 0");
+
+        // Add components to the container
+        container.getChildren().addAll(heartIcon, heartLabel);
     }
 
     public void resetHearts() {
-        this.initializeHearts();
+        setHearts(this.heartAmount);
+    }
+
+    public void setHearts(int currentHearts) {
+        heartLabel.setText("x " + currentHearts);
     }
 
     public HBox getContainer() {
         return container;
-    }
-
-    public void setHearts(int currentHearts) {
-        int currentDisplayedHearts = container.getChildren().size();
-
-        if (currentHearts > currentDisplayedHearts) {
-            // Add missing hearts
-            int heartsToAdd = currentHearts - currentDisplayedHearts;
-            for (int i = 0; i < heartsToAdd; i++) {
-                ImageView heart = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
-                heart.setFitHeight(HEART_HEIGHT);
-                heart.setPreserveRatio(true);
-                container.getChildren().add(heart);
-            }
-        } else if (currentHearts < currentDisplayedHearts) {
-            // Remove excess hearts
-            int heartsToRemove = currentDisplayedHearts - currentHearts;
-            for (int i = 0; i < heartsToRemove; i++) {
-                container.getChildren().remove(INDEX_OF_FIRST_ITEM);
-            }
-        }
     }
 }
