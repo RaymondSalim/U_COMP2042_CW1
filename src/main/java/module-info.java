@@ -14,4 +14,5 @@ module com.example.demo {
     exports com.example.demo;
     opens com.example.demo.view.objects to javafx.fxml;
     opens com.example.demo.view.screens to javafx.fxml;
+    opens com.example.demo.view.screens.levels to javafx.fxml;
 }

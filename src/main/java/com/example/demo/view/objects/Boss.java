@@ -129,13 +129,11 @@ public class Boss extends FighterPlane {
     }
 
     private void activateShield() {
-        System.out.println("Shield Activated");
         isShielded = true;
         shieldImage.setVisible(true); // Show shield
     }
 
     private void deactivateShield() {
-        System.out.println("Shield Deactivated");
         isShielded = false;
         framesWithShieldActivated = 0;
         shieldImage.setVisible(false); // Hide shield
