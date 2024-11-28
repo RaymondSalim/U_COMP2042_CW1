@@ -18,10 +18,12 @@ public class UIController extends GameStateObservable {
     private Scene menuScene;
     private Scene levelSelectScene;
     private Scene settingsScene;
+    private Scene creditsScene;
 
     private LevelComplete levelCompleteOverlay;
     private GameOver gameOverOverlay;
     private PauseMenu pauseOverlay;
+    private CreditsScreen creditsScreen;
 
     public UIController(Stage stage, NavigationHandler navigationHandler) {
         this.stage = stage;
@@ -39,6 +41,9 @@ public class UIController extends GameStateObservable {
 
         Settings settingsScreen = new Settings(navigationHandler);
         settingsScene = settingsScreen.createScene();
+
+        creditsScreen = new CreditsScreen(navigationHandler);
+        creditsScene = creditsScreen.createScene();
     }
 
     public void setPauseMenu(PauseMenu pauseMenu) {
@@ -54,18 +59,32 @@ public class UIController extends GameStateObservable {
     }
 
     public void showMenuScreen() {
+        stage.setOpacity(0.0);
         stage.setScene(menuScene);
         stage.show();
+        stage.setOpacity(1.0);
     }
 
     public void showLevelSelectScreen() {
+        stage.setOpacity(0.0);
         stage.setScene(levelSelectScene);
         stage.show();
+        stage.setOpacity(1.0);
     }
 
     public void showSettingsScreen() {
+        stage.setOpacity(0.0);
         stage.setScene(settingsScene);
         stage.show();
+        stage.setOpacity(1.0);
+    }
+
+    public void showCreditsScreen() {
+        stage.setOpacity(0.0);
+        stage.setScene(creditsScene);
+        stage.show();
+        stage.setOpacity(1.0);
+        creditsScreen.startCredits();
     }
 
     public void addOverlayToLayout(StackPane layout) {
@@ -88,10 +107,6 @@ public class UIController extends GameStateObservable {
 
     public void hideLevelCompleteOverlay() {
         levelCompleteOverlay.hide();
-    }
-
-    public void showGameWinScreen() {
-        // TODO!
     }
 
     public void hideOverlays() {

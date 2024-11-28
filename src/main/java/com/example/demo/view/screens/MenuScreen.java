@@ -7,6 +7,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -45,7 +46,7 @@ public class MenuScreen {
         titleImageView.setPreserveRatio(true);
         titleImageView.setFitWidth(context.getScreenWidth() * 0.4);
 
-        // Buttons
+        // Main Buttons
         ImageButton startButton = new ImageButton(MENU_ASSETS_FOLDER + "/start2.png");
         ImageButton settingsButton = new ImageButton(MENU_ASSETS_FOLDER + "/settings.png");
         ImageButton exitButton = new ImageButton(MENU_ASSETS_FOLDER + "/exit.png");
@@ -64,6 +65,14 @@ public class MenuScreen {
         VBox mainButtonsPane = new VBox(15, startButton, settingsButton, exitButton);
         mainButtonsPane.setAlignment(Pos.CENTER);
 
+        // Credits Button
+        ImageButton creditsButton = new ImageButton(MENU_ASSETS_FOLDER + "/creditsBtn.png");
+        creditsButton.setPreserveRatio(true);
+        creditsButton.setFitWidth(50); // Set a fixed width for the back button
+        creditsButton.setOnMouseClicked(e -> navigationHandler.showCreditsScreen());
+        StackPane.setMargin(creditsButton, new Insets(20));
+        StackPane.setAlignment(creditsButton, Pos.BOTTOM_RIGHT);
+
         VBox centerPane = new VBox(100, titleImageView, mainButtonsPane);
         centerPane.setAlignment(Pos.CENTER);
 
@@ -78,7 +87,7 @@ public class MenuScreen {
         meteorTimeline.setCycleCount(Timeline.INDEFINITE);
         meteorTimeline.play();
 
-        root.getChildren().addAll(backgroundImageView, meteorPane, centerPane);
+        root.getChildren().addAll(backgroundImageView, meteorPane, centerPane, creditsButton);
         StackPane.setAlignment(centerPane, Pos.CENTER);
 
         return new Scene(root, context.getScreenWidth(), context.getScreenHeight());

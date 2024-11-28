@@ -80,7 +80,7 @@ public class LevelController implements GameStateObserver {
     @Override
     public void onGameWin() {
         gameTimeline.stop();
-        uiController.showGameWinScreen();
+        uiController.showCreditsScreen();
     }
 
     private void initializeOverlays() {
