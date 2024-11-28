@@ -18,8 +18,8 @@ public class UIController extends GameStateObservable {
     private Scene menuScene;
     private Scene levelSelectScene;
     private Scene settingsScene;
-    private final StackPane levelCompleteOverlay;
 
+    private LevelComplete levelCompleteOverlay;
     private GameOver gameOverOverlay;
     private PauseMenu pauseOverlay;
 
@@ -28,9 +28,6 @@ public class UIController extends GameStateObservable {
 
         // Initialize UI screens
         initializeScreens(navigationHandler);
-
-        // Create overlays
-        this.levelCompleteOverlay = createLevelCompleteOverlay();
     }
 
     private void initializeScreens(NavigationHandler navigationHandler) {
@@ -52,6 +49,10 @@ public class UIController extends GameStateObservable {
         this.gameOverOverlay = gameOver;
     }
 
+    public void setLevelCompleteOverlay(LevelComplete levelCompleteOverlay) {
+        this.levelCompleteOverlay = levelCompleteOverlay;
+    }
+
     public void showMenuScreen() {
         stage.setScene(menuScene);
         stage.show();
@@ -68,7 +69,7 @@ public class UIController extends GameStateObservable {
     }
 
     public void addOverlayToLayout(StackPane layout) {
-        layout.getChildren().addAll(pauseOverlay.getPane(), gameOverOverlay.getPane(), levelCompleteOverlay);
+        layout.getChildren().addAll(pauseOverlay.getPane(), gameOverOverlay.getPane(), levelCompleteOverlay.getPane());
     }
 
     public void showGameOverOverlay() {
@@ -79,12 +80,14 @@ public class UIController extends GameStateObservable {
         gameOverOverlay.hide();
     }
 
-    public void showLevelCompleteOverlay() {
-        levelCompleteOverlay.setVisible(true);
+    public void showLevelCompleteOverlay(int score, int starCount) {
+        levelCompleteOverlay.setStarCount(starCount);
+        levelCompleteOverlay.setScore(score);
+        levelCompleteOverlay.show();
     }
 
     public void hideLevelCompleteOverlay() {
-        levelCompleteOverlay.setVisible(false);
+        levelCompleteOverlay.hide();
     }
 
     public void showGameWinScreen() {

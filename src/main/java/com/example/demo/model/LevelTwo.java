@@ -14,12 +14,17 @@ public class LevelTwo extends LevelParent {
     }
 
     @Override
+    protected int calculateStars(int score) {
+        return 3;
+    }
+
+    @Override
     protected LevelView instantiateLevelView() {
         return new com.example.demo.view.screens.LevelTwo(getRoot(), PLAYER_INITIAL_HEALTH);
     }
 
     @Override
-    protected void checkKillCount() {
+    protected void checkLevelCompleted() {
         if (boss.isDestroyed()) {
             levelComplete();
         }

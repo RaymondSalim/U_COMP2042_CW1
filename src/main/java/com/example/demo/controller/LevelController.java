@@ -8,6 +8,7 @@ import com.example.demo.model.base.LevelParent;
 import com.example.demo.observer.GameStateObserver;
 import com.example.demo.view.base.LevelView;
 import com.example.demo.view.screens.GameOver;
+import com.example.demo.view.screens.LevelComplete;
 import com.example.demo.view.screens.PauseMenu;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -20,8 +21,10 @@ import javafx.util.Duration;
 public class LevelController implements GameStateObserver {
     private final Stage stage;
     private final UIController uiController;
+
     private PauseMenu pauseMenu;
     private GameOver gameOverOverlay;
+    private LevelComplete levelCompleteOverlay;
 
     private LevelParent currentLevel;
     private LevelView currentLevelView;
@@ -34,8 +37,7 @@ public class LevelController implements GameStateObserver {
         this.uiController = uiController;
         this.uiController.addGameStateObserver(this);
 
-        initializePauseMenu();
-        initializeGameOverOverlay();
+        initializeOverlays();
     }
 
     @Override
@@ -61,7 +63,9 @@ public class LevelController implements GameStateObserver {
     public void onLevelComplete() {
         gameTimeline.stop();
         currentLevel.pause();
-        uiController.showLevelCompleteOverlay();
+        int score = currentLevel.getScore();
+        int starCount = currentLevel.getStarCount();
+        uiController.showLevelCompleteOverlay(score, starCount);
     }
 
     @Override
@@ -79,31 +83,34 @@ public class LevelController implements GameStateObserver {
         uiController.showGameWinScreen();
     }
 
-    private void initializePauseMenu() {
+    private void initializeOverlays() {
+        Runnable showLevelSelect = () -> {
+            gameTimeline.stop();
+            currentLevel.resetLevel();
+            pauseMenu.hide();
+            uiController.showLevelSelectScreen();
+        };
+
         pauseMenu = new PauseMenu(
                 this::resumeGame, // Resume button action
                 this::onLevelRestart,
-                () -> {
-                    gameTimeline.stop();
-                    currentLevel.pause();
-                    pauseMenu.hide();
-                    uiController.showLevelSelectScreen();
-                }
+                showLevelSelect
         );
-        uiController.setPauseMenu(pauseMenu);
-    }
 
-    private void initializeGameOverOverlay() {
         gameOverOverlay = new GameOver(
                 this::onLevelRestart,
-                () -> {
-                    gameTimeline.stop();
-                    currentLevel.pause();
-                    pauseMenu.hide();
-                    uiController.showLevelSelectScreen();
-                }
+                showLevelSelect
         );
+
+        levelCompleteOverlay = new LevelComplete(
+                showLevelSelect,
+                this::onLevelRestart,
+                this::onLevelAdvance
+        );
+
+        uiController.setPauseMenu(pauseMenu);
         uiController.setGameOver(gameOverOverlay);
+        uiController.setLevelCompleteOverlay(levelCompleteOverlay);
     }
 
     public void goToLevel(LevelType levelType) {

@@ -11,8 +11,24 @@ public class LevelOne extends LevelParent {
         super(PLAYER_INITIAL_HEALTH);
 
         super.NEXT_LEVEL = LevelType.LEVEL_TWO;
-        super.KILLS_TO_ADVANCE = 20;
         super.MAX_ENEMY_SPAWN = 20;
+    }
+
+    @Override
+    protected int calculateStars(int score) {
+        if (score < 1500) {
+            return 0;
+        }
+
+        if (score < 1900) {
+            return 1;
+        }
+
+        if (score < 2000) {
+            return 2;
+        }
+
+        return 3;
     }
 
     @Override

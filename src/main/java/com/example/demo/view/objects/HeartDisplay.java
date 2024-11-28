@@ -21,7 +21,7 @@ public class HeartDisplay {
     private final ImageView heartIcon; // Single heart image
     private final Label heartLabel;   // Label to show "x N"
 
-    private int heartAmount;
+    private final int heartAmount;
 
     public HeartDisplay(double xPosition, double yPosition, int heartsToDisplay) {
         this.containerXPosition = xPosition;
