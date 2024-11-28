@@ -31,9 +31,15 @@ public class LevelTwo extends LevelParent {
     }
 
     @Override
+    public void updateScene(double deltaTime) {
+        super.updateScene(deltaTime);
+    }
+
+    @Override
     protected void spawnEnemyUnits() {
         if (getEnemyUnits().isEmpty()) {  // Only add the boss if there are no other enemies
             addEnemyUnit(boss);
+            getRoot().getChildren().add(boss.getShieldImage());
         }
     }
 }
