@@ -7,7 +7,7 @@ import com.example.demo.view.base.LevelView;
 import com.example.demo.view.objects.EnemyPlane;
 
 public class LevelOne extends LevelParent {
-    private static final int PLAYER_INITIAL_HEALTH = 5;
+    private static final int PLAYER_INITIAL_HEALTH = 1;
     private static final double STEP_DELAY = 1.5; // Delay duration in seconds
     private int tutorialPhase = 0;
     private boolean phaseComplete = false;

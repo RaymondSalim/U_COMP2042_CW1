@@ -58,9 +58,8 @@ public class LevelSelect {
 
         level1Button.setOnMouseClicked(e -> navigationHandler.startLevel(LevelType.LEVEL_ONE));
         level2Button.setOnMouseClicked(e -> navigationHandler.startLevel(LevelType.LEVEL_TWO));
-        // TODO!
-        //        level2Button.setOnMouseClicked(e -> navigationHandler.startLevel(LevelType.LEVEL_THREE));
-        //        level2Button.setOnMouseClicked(e -> navigationHandler.startLevel(LevelType.LEVEL_FOUR));
+        level3Button.setOnMouseClicked(e -> navigationHandler.startLevel(LevelType.LEVEL_THREE));
+        level4Button.setOnMouseClicked(e -> navigationHandler.startLevel(LevelType.LEVEL_FOUR));
 
         HBox mainButtonsPane = new HBox(30, level1Button, level2Button, level3Button, level4Button);
         mainButtonsPane.setAlignment(Pos.CENTER);
