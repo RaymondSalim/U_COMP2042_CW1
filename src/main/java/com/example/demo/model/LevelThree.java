@@ -34,6 +34,6 @@ public class LevelThree extends LevelParent {
 
     @Override
     protected LevelView instantiateLevelView() {
-        return new com.example.demo.view.screens.levels.LevelTwo(getRoot(), PLAYER_INITIAL_HEALTH);
+        return new com.example.demo.view.screens.levels.LevelThree(getRoot(), PLAYER_INITIAL_HEALTH);
     }
 }
