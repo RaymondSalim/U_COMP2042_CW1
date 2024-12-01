@@ -61,7 +61,7 @@ public class LevelOne extends LevelParent {
 
             case 1: // Firing tutorial
                 if (!phaseComplete) {
-                    levelView.displayMessage("Press SPACE to fire your missile!");
+                    levelView.displayMessage("Press SPACE to fire your missile! Fire at least four missiles!");
                     phaseComplete = missileShot > 3 && missilesPastHalfway();
                 } else {
                     getUserProjectiles().forEach(p -> getRoot().getChildren().remove(p));
@@ -77,8 +77,7 @@ public class LevelOne extends LevelParent {
                     if (!hasSpawned) {
                         spawnEnemy(); // Spawn one enemy for the tutorial
                     }
-                    super.updateScene(deltaTime);
-                    phaseComplete = getEnemyUnits().isEmpty();
+                    phaseComplete = getUser().getKillCount() == 1;
                 } else {
                     levelView.deleteMessage();
                     transitionToNextPhase(); // Transition to next phase, now to level completion
@@ -104,6 +103,7 @@ public class LevelOne extends LevelParent {
         tutorialPhase = 0;
         movementTime = 0.0;
         phaseComplete = false;
+        hasSpawned = false;
 
         com.example.demo.view.screens.levels.LevelOne levelView = (com.example.demo.view.screens.levels.LevelOne) getLevelView();
         levelView.deleteMessage();

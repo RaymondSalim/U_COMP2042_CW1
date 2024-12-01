@@ -100,4 +100,8 @@ public class UserPlane extends FighterPlane implements ScreenSizeObserver {
     public boolean isDestroyed() {
         return player.isDestroyed();
     }
+
+    public int getKillCount() {
+        return player.getKillCount();
+    }
 }
