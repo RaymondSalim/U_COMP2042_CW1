@@ -22,6 +22,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     protected int MAX_ENEMIES_AT_A_TIME = 5;
     protected int MAX_ENEMY_SPAWN;
     protected double ENEMY_SPAWN_PROBABILITY = .20;
+    private final double ENEMY_SPAWN_DELAY = 3.0;
     protected LevelType NEXT_LEVEL;
 
     private static final double BOTTOM_MARGIN = 150;
@@ -43,7 +44,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     private final LevelView levelView;
 
     private int spawnedEnemies = 0;
-
+    private double enemySpawnDelay = ENEMY_SPAWN_DELAY;
     public LevelParent(int playerInitialHealth) {
         this.root = new Group();
         root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
@@ -79,6 +80,14 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     public int getScore() {
         return score;
+    }
+
+    public List<ActiveActorDestructible> getUserProjectiles() {
+        return userProjectiles;
+    }
+
+    public UserPlane getUser() {
+        return user;
     }
 
     protected abstract int calculateStars(int score);
@@ -128,6 +137,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
         spawnedEnemies = 0;
         score = 0;
+        enemySpawnDelay = ENEMY_SPAWN_DELAY;
 
         friendlyUnits.add(user);
         initializeFriendlyUnits();
@@ -155,8 +165,13 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     public void updateScene(double deltaTime) {
-        spawnEnemyUnits();
         updateActors(deltaTime);
+
+        if (enemySpawnDelay > 0) {
+            enemySpawnDelay -= deltaTime; // Decrement the delay timer
+            return; // Skip enemy spawning and other updates during delay
+        }
+        spawnEnemyUnits();
         generateEnemyFire();
         handleEnemyPenetration();
         handleUserProjectileCollisions();
