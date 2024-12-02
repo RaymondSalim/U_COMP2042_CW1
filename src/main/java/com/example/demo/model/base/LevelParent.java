@@ -1,29 +1,28 @@
 package com.example.demo.model.base;
 
 import com.example.demo.context.AppContext;
+import com.example.demo.enums.Direction;
 import com.example.demo.enums.GameState;
 import com.example.demo.enums.LevelType;
 import com.example.demo.model.Player;
 import com.example.demo.observer.GameStateObservable;
 import com.example.demo.observer.ScreenSizeObserver;
-import com.example.demo.view.EnemyPlane;
-import com.example.demo.view.UserPlane;
 import com.example.demo.view.base.ActiveActorDestructible;
 import com.example.demo.view.base.FighterPlane;
 import com.example.demo.view.base.LevelView;
+import com.example.demo.view.objects.EnemyPlane;
+import com.example.demo.view.objects.UserPlane;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class LevelParent extends GameStateObservable implements ScreenSizeObserver {
-    protected int TOTAL_ENEMIES = 5;
-    protected int KILLS_TO_ADVANCE;
+    protected int MAX_ENEMIES_AT_A_TIME = 5;
+    protected int MAX_ENEMY_SPAWN;
     protected double ENEMY_SPAWN_PROBABILITY = .20;
+    private final double ENEMY_SPAWN_DELAY = 3.0;
     protected LevelType NEXT_LEVEL;
 
     private static final double BOTTOM_MARGIN = 150;
@@ -33,7 +32,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     private final Group root;
     private final UserPlane user;
-    private final ImageView background;
 
     private final Player player;
     private final List<ActiveActorDestructible> friendlyUnits;
@@ -41,9 +39,13 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     private final List<ActiveActorDestructible> userProjectiles;
     private final List<ActiveActorDestructible> enemyProjectiles;
 
+    private int score = 0;
+
     private final LevelView levelView;
 
-    public LevelParent(String backgroundImageName, int playerInitialHealth) {
+    private int spawnedEnemies = 0;
+    private double enemySpawnDelay = ENEMY_SPAWN_DELAY;
+    public LevelParent(int playerInitialHealth) {
         this.root = new Group();
         root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
         root.layoutYProperty().addListener((obs, oldVal, newVal) -> root.setLayoutY(0));
@@ -52,10 +54,8 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         this.screenHeight = context.getScreenHeight();
         this.screenWidth = context.getScreenWidth();
 
-        this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
         this.enemyMaximumYPosition = screenHeight - BOTTOM_MARGIN;
         this.levelView = instantiateLevelView();
-        initializeBackground();
 
         this.friendlyUnits = new ArrayList<>();
         this.enemyUnits = new ArrayList<>();
@@ -65,10 +65,32 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         this.player = new Player(playerInitialHealth);
         this.user = new UserPlane(player);
 
-        levelView.showHeartDisplay();
+        levelView.initializeUI();
         friendlyUnits.add(user);
         initializeFriendlyUnits();
     }
+
+    public LevelView getLevelView() {
+        return levelView;
+    }
+
+    public int getStarCount() {
+        return this.calculateStars(score);
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public List<ActiveActorDestructible> getUserProjectiles() {
+        return userProjectiles;
+    }
+
+    public UserPlane getUser() {
+        return user;
+    }
+
+    protected abstract int calculateStars(int score);
 
     @Override
     public void onScreenSizeChanged(int newHeight, int newWidth) {
@@ -76,12 +98,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         this.screenWidth = newWidth;
 
         this.enemyMaximumYPosition = this.screenHeight - BOTTOM_MARGIN;
-
-        root.getChildren().remove(background);
-        background.setFitHeight(this.screenHeight);
-        background.setFitWidth(this.screenWidth);
-        root.getChildren().add(0, background);
-
         repositionOutOfBoundsActors();
     }
 
@@ -119,6 +135,10 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         this.user.resetPosition();
         this.levelView.reset();
 
+        spawnedEnemies = 0;
+        score = 0;
+        enemySpawnDelay = ENEMY_SPAWN_DELAY;
+
         friendlyUnits.add(user);
         initializeFriendlyUnits();
     }
@@ -144,18 +164,26 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         return NEXT_LEVEL;
     }
 
-    public void updateScene() {
-        spawnEnemyUnits();
-        updateActors();
-        generateEnemyFire();
-        handleEnemyPenetration();
-        handleUserProjectileCollisions();
-        handleEnemyProjectileCollisions();
-        handlePlaneCollisions();
-        removeAllDestroyedActors();
+    public void updateScene(double deltaTime) {
+        updateActors(deltaTime);
+
+        if (enemySpawnDelay > 0) {
+            enemySpawnDelay -= deltaTime; // Decrement the delay timer
+            return; // Skip enemy spawning and other updates during delay
+        } else {
+            spawnEnemyUnits();
+            generateEnemyFire();
+            handleEnemyPenetration();
+            handleUserProjectileCollisions();
+            handleEnemyProjectileCollisions();
+            handleCollisions(userProjectiles, enemyProjectiles);
+            handlePlaneCollisions();
+            removeAllDestroyedActors();
+        }
+
         updateLevelView();
         checkPlayerHealth();
-        checkKillCount();
+        checkLevelCompleted();
     }
 
     private void checkPlayerHealth() {
@@ -164,8 +192,8 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         }
     }
 
-    protected void checkKillCount() {
-        if (player.getKillCount() >= KILLS_TO_ADVANCE) {
+    protected void checkLevelCompleted() {
+        if (MAX_ENEMY_SPAWN == spawnedEnemies && enemyUnits.isEmpty()) {
             levelComplete();
         }
     }
@@ -180,23 +208,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     private void initializeFriendlyUnits() {
         this.root.getChildren().addAll(this.user);
-    }
-
-    private void initializeBackground() {
-        background.setFocusTraversable(true);
-        background.setFitHeight(screenHeight);
-        background.setFitWidth(screenWidth);
-        background.setOnKeyPressed(e -> {
-            KeyCode kc = e.getCode();
-            if (kc == KeyCode.UP) user.moveUp();
-            if (kc == KeyCode.DOWN) user.moveDown();
-            if (kc == KeyCode.SPACE) fireProjectile();
-        });
-        background.setOnKeyReleased(e -> {
-            KeyCode kc = e.getCode();
-            if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stop();
-        });
-        root.getChildren().add(background);
     }
 
     private void fireProjectile() {
@@ -217,20 +228,23 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     protected void spawnEnemyUnits() {
-        for (int i = 0; i < TOTAL_ENEMIES - enemyUnits.size(); i++) {
-            if (Math.random() < ENEMY_SPAWN_PROBABILITY) {
-                double newEnemyInitialYPosition = Math.random() * enemyMaximumYPosition;
-                ActiveActorDestructible newEnemy = new EnemyPlane(screenWidth, newEnemyInitialYPosition);
+        int enemiesToSpawn = Math.min(MAX_ENEMIES_AT_A_TIME - enemyUnits.size(), MAX_ENEMY_SPAWN - spawnedEnemies);
+
+        for (int i = 0; i < enemiesToSpawn; i++) {
+            if (spawnedEnemies < MAX_ENEMY_SPAWN && Math.random() < ENEMY_SPAWN_PROBABILITY) {
+                double newEnemyYPos = Math.random() * enemyMaximumYPosition;
+                ActiveActorDestructible newEnemy = new EnemyPlane(screenWidth, newEnemyYPos);
                 addEnemyUnit(newEnemy);
+                spawnedEnemies++;
             }
         }
     }
 
-    private void updateActors() {
-        friendlyUnits.forEach(plane -> plane.updateActor());
-        enemyUnits.forEach(enemy -> enemy.updateActor());
-        userProjectiles.forEach(projectile -> projectile.updateActor());
-        enemyProjectiles.forEach(projectile -> projectile.updateActor());
+    private void updateActors(double deltaTime) {
+        friendlyUnits.forEach(actor -> actor.updateActor(deltaTime));
+        enemyUnits.forEach(actor -> actor.updateActor(deltaTime));
+        userProjectiles.forEach(actor -> actor.updateActor(deltaTime));
+        enemyProjectiles.forEach(actor -> actor.updateActor(deltaTime));
     }
 
     private void removeAllDestroyedActors() {
@@ -250,13 +264,16 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     private void handlePlaneCollisions() {
         for (ActiveActorDestructible friendly : friendlyUnits) {
             for (ActiveActorDestructible enemy : enemyUnits) {
-                if (friendly.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                    friendly.takeDamage();
-                    enemy.takeDamage();
+                if (!friendly.isDestroyed() && !enemy.isDestroyed()) {
+                    if (friendly.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                        friendly.takeDamage();
+                        enemy.takeDamage();
 
-                    // Check if enemy is destroyed
-                    if (enemy.isDestroyed()) {
-                        user.incrementKillCount();
+                        // Check if enemy is destroyed
+                        if (enemy.isDestroyed()) {
+                            user.incrementKillCount();
+                            score += 100;
+                        }
                     }
                 }
             }
@@ -264,21 +281,31 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     private void handleUserProjectileCollisions() {
+        List<ActiveActorDestructible> projectilesToRemove = new ArrayList<>();
         for (ActiveActorDestructible projectile : userProjectiles) {
             for (ActiveActorDestructible enemy : enemyUnits) {
-                if (projectile.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                    projectile.takeDamage();
-                    enemy.takeDamage();
+                // Check if the projectile is out of bounds along the X-axis
+                double projectileX = projectile.getLayoutX() + projectile.getTranslateX();
+                if (projectileX < 0 || projectileX > screenWidth) {
+                    projectilesToRemove.add(projectile);
+                    continue; // Skip collision checks for out-of-bounds projectiles
+                }
 
-                    // Check if enemy is destroyed
-                    if (enemy.isDestroyed()) {
-                        user.incrementKillCount();
+                if (!projectile.isDestroyed() && !enemy.isDestroyed()) {
+                    if (projectile.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                        projectile.takeDamage();
+                        enemy.takeDamage();
+
+                        // Check if enemy is destroyed
+                        if (enemy.isDestroyed()) {
+                            user.incrementKillCount();
+                            score += 100;
+                        }
                     }
                 }
             }
         }
-
-        handleCollisions(userProjectiles, enemyProjectiles);
+        userProjectiles.removeAll(projectilesToRemove);
     }
 
     private void handleEnemyProjectileCollisions() {
@@ -289,9 +316,11 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
                                   List<ActiveActorDestructible> actors2) {
         for (ActiveActorDestructible actor : actors2) {
             for (ActiveActorDestructible otherActor : actors1) {
-                if (actor.getBoundsInParent().intersects(otherActor.getBoundsInParent())) {
-                    actor.takeDamage();
-                    otherActor.takeDamage();
+                if (!actor.isDestroyed() && !otherActor.isDestroyed()) {
+                    if (actor.getBoundsInParent().intersects(otherActor.getBoundsInParent())) {
+                        actor.takeDamage();
+                        otherActor.takeDamage();
+                    }
                 }
             }
         }
@@ -311,11 +340,52 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     private void updateLevelView() {
-        levelView.removeHearts(player.getHealth());
+        levelView.updateHealth(player.getHealth());
     }
 
     protected void addEnemyUnit(ActiveActorDestructible enemy) {
         enemyUnits.add(enemy);
         root.getChildren().add(enemy);
+    }
+
+    public void pause() {
+        this.levelView.pause();
+    }
+
+    public void resume() {
+        this.levelView.resume();
+    }
+
+    public void moveUserPlane(Direction direction) {
+        switch (direction) {
+            case UP -> user.moveUp();
+            case DOWN -> user.moveDown();
+        }
+    }
+
+    public void userFireProjectile() {
+        fireProjectile();
+    }
+
+    public void stopUserPlane() {
+        user.stop();
+    }
+
+    protected void updateProgressBar() {
+        levelView.updateProgress(
+                (double) spawnedEnemies / MAX_ENEMY_SPAWN,
+                0.2
+        );
+    }
+
+    public void updateView(LevelView levelView, double deltaTime) {
+        friendlyUnits.forEach(u -> levelView.updateActor(u, deltaTime));
+        enemyUnits.forEach(u -> levelView.updateActor(u, deltaTime));
+        userProjectiles.forEach(u -> levelView.updateActor(u, deltaTime));
+        enemyProjectiles.forEach(u -> levelView.updateActor(u, deltaTime));
+
+        levelView.updateHealth(player.getHealth());
+        levelView.updateScore(score);
+        updateProgressBar();
     }
 }

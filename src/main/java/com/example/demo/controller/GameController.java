@@ -36,6 +36,11 @@ public class GameController implements NavigationHandler {
     }
 
     @Override
+    public void showCreditsScreen() {
+        uiController.showCreditsScreen();
+    }
+
+    @Override
     public void startLevel(LevelType levelType) {
         levelController.goToLevel(levelType);
     }

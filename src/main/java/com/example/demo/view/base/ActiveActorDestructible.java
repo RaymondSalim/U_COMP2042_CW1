@@ -10,10 +10,14 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
     }
 
     @Override
-    public abstract void updatePosition();
+    public abstract void updatePosition(double deltaTime);
 
-    public abstract void updateActor();
+    @Override
+    public void updateActor(double deltaTime) {
+        if (isDestroyed) return;
 
+        updatePosition(deltaTime);
+    }
     @Override
     public abstract void takeDamage();
 
@@ -30,4 +34,16 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
         this.isDestroyed = isDestroyed;
     }
 
+    public void updateVisual(double deltaTime) {
+        // If the actor is destroyed, make it invisible
+        if (isDestroyed()) {
+            this.setVisible(false);
+        } else {
+            // Ensure visibility if not destroyed
+            this.setVisible(true);
+
+            // Update position based on current logical state
+            updatePosition(deltaTime);
+        }
+    }
 }

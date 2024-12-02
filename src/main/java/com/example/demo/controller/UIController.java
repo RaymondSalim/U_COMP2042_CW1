@@ -2,11 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.enums.GameState;
 import com.example.demo.observer.GameStateObservable;
-import com.example.demo.view.LevelSelect;
-import com.example.demo.view.MenuScreen;
-import com.example.demo.view.PauseMenu;
-import com.example.demo.view.Settings;
 import com.example.demo.view.base.NavigationHandler;
+import com.example.demo.view.screens.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,19 +18,18 @@ public class UIController extends GameStateObservable {
     private Scene menuScene;
     private Scene levelSelectScene;
     private Scene settingsScene;
-    private final StackPane gameOverOverlay;
-    private final StackPane levelCompleteOverlay;
+    private Scene creditsScene;
+
+    private LevelComplete levelCompleteOverlay;
+    private GameOver gameOverOverlay;
     private PauseMenu pauseOverlay;
+    private CreditsScreen creditsScreen;
 
     public UIController(Stage stage, NavigationHandler navigationHandler) {
         this.stage = stage;
 
         // Initialize UI screens
         initializeScreens(navigationHandler);
-
-        // Create overlays
-        this.gameOverOverlay = createGameOverOverlay();
-        this.levelCompleteOverlay = createLevelCompleteOverlay();
     }
 
     private void initializeScreens(NavigationHandler navigationHandler) {
@@ -45,64 +41,77 @@ public class UIController extends GameStateObservable {
 
         Settings settingsScreen = new Settings(navigationHandler);
         settingsScene = settingsScreen.createScene();
+
+        creditsScreen = new CreditsScreen(navigationHandler);
+        creditsScene = creditsScreen.createScene();
     }
 
     public void setPauseMenu(PauseMenu pauseMenu) {
         this.pauseOverlay = pauseMenu;
+    }
 
+    public void setGameOver(GameOver gameOver) {
+        this.gameOverOverlay = gameOver;
+    }
+
+    public void setLevelCompleteOverlay(LevelComplete levelCompleteOverlay) {
+        this.levelCompleteOverlay = levelCompleteOverlay;
     }
 
     public void showMenuScreen() {
+        stage.setOpacity(0.0);
         stage.setScene(menuScene);
         stage.show();
+        stage.setOpacity(1.0);
     }
 
     public void showLevelSelectScreen() {
+        stage.setOpacity(0.0);
         stage.setScene(levelSelectScene);
         stage.show();
+        stage.setOpacity(1.0);
     }
 
     public void showSettingsScreen() {
+        stage.setOpacity(0.0);
         stage.setScene(settingsScene);
         stage.show();
+        stage.setOpacity(1.0);
+    }
+
+    public void showCreditsScreen() {
+        stage.setOpacity(0.0);
+        stage.setScene(creditsScene);
+        stage.show();
+        stage.setOpacity(1.0);
+        creditsScreen.startCredits();
     }
 
     public void addOverlayToLayout(StackPane layout) {
-        layout.getChildren().addAll(pauseOverlay.getPane(), gameOverOverlay, levelCompleteOverlay);
+        layout.getChildren().addAll(pauseOverlay.getPane(), gameOverOverlay.getPane(), levelCompleteOverlay.getPane());
     }
 
     public void showGameOverOverlay() {
-        gameOverOverlay.setVisible(true);
+        gameOverOverlay.show();
     }
 
     public void hideGameOverOverlay() {
-        gameOverOverlay.setVisible(false);
+        gameOverOverlay.hide();
     }
 
-    public void showLevelCompleteOverlay() {
-        levelCompleteOverlay.setVisible(true);
+    public void showLevelCompleteOverlay(int score, int starCount) {
+        levelCompleteOverlay.setStarCount(starCount);
+        levelCompleteOverlay.setScore(score);
+        levelCompleteOverlay.show();
     }
 
     public void hideLevelCompleteOverlay() {
-        levelCompleteOverlay.setVisible(false);
+        levelCompleteOverlay.hide();
     }
 
-    private StackPane createGameOverOverlay() {
-        VBox overlayContent = new VBox(10);
-        overlayContent.setAlignment(Pos.CENTER);
-
-        Rectangle background = new Rectangle(300, 200, Color.rgb(0, 0, 0, 0.7));
-        Button restartButton = new Button("Restart");
-        restartButton.setOnAction(e -> {
-            notifyEvent(GameState.LEVEL_RESTARTED);
-            hideGameOverOverlay();
-        });
-
-        overlayContent.getChildren().addAll(restartButton);
-        StackPane overlay = new StackPane(background, overlayContent);
-        overlay.setAlignment(Pos.CENTER);
-        overlay.setVisible(false);
-        return overlay;
+    public void hideOverlays() {
+        hideLevelCompleteOverlay();
+        hideGameOverOverlay();
     }
 
     private StackPane createLevelCompleteOverlay() {
@@ -116,11 +125,13 @@ public class UIController extends GameStateObservable {
         nextLevelButton.setOnAction(e -> {
             notifyEvent(GameState.LEVEL_ADVANCED);
             hideLevelCompleteOverlay();
+            hideGameOverOverlay();
         });
 
         restartButton.setOnAction(e -> {
             notifyEvent(GameState.LEVEL_RESTARTED);
             hideLevelCompleteOverlay();
+            hideGameOverOverlay();
         });
 
         overlayContent.getChildren().addAll(nextLevelButton, restartButton);

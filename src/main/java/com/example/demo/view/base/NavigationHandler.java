@@ -9,6 +9,8 @@ public interface NavigationHandler {
 
     void showMenuScreen();
 
+    void showCreditsScreen();
+
     void exitGame();
 
     void startLevel(LevelType levelType);

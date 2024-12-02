@@ -1,4 +1,4 @@
-package com.example.demo.view;
+package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
 import com.example.demo.observer.ScreenSizeObserver;
@@ -45,9 +45,9 @@ public class PauseMenu implements ScreenSizeObserver {
         buttonsPane.setAlignment(Pos.CENTER);
         buttonsPane.prefWidthProperty().bind(menu.widthProperty());
 
-        ImageButton levelSelectButton = new ImageButton("/com/example/demo/images/pauseMenu/levelSelectButton.png");
-        ImageButton restartButton = new ImageButton("/com/example/demo/images/pauseMenu/restartButton.png");
-        ImageButton resumeButton = new ImageButton("/com/example/demo/images/pauseMenu/playButton.png");
+        ImageButton levelSelectButton = new ImageButton("/com/example/demo/images/shared/levelSelectButton.png");
+        ImageButton restartButton = new ImageButton("/com/example/demo/images/shared/restartButton.png");
+        ImageButton resumeButton = new ImageButton("/com/example/demo/images/shared/playButton.png");
 
         resumeButton.setOnMouseClicked(event -> onResume.run());
         levelSelectButton.setOnMouseClicked(event -> onLevelSelect.run());

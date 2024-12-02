@@ -1,4 +1,4 @@
-package com.example.demo.view;
+package com.example.demo.view.objects;
 
 import com.example.demo.view.base.Projectile;
 
@@ -6,7 +6,7 @@ public class BossProjectile extends Projectile {
 
     private static final String IMAGE_NAME = "fireball.png";
     private static final int IMAGE_HEIGHT = 75;
-    private static final int HORIZONTAL_VELOCITY = -15;
+    private static final int HORIZONTAL_VELOCITY = -80;
     private static final int INITIAL_X_POSITION = 950;
 
     public BossProjectile(double initialYPos) {
@@ -14,13 +14,13 @@ public class BossProjectile extends Projectile {
     }
 
     @Override
-    public void updatePosition() {
-        moveHorizontally(HORIZONTAL_VELOCITY);
+    public void updatePosition(double deltaTime) {
+        moveHorizontally(HORIZONTAL_VELOCITY * deltaTime);
     }
 
     @Override
-    public void updateActor() {
-        updatePosition();
+    public void updateActor(double deltaTime) {
+        updatePosition(deltaTime);
     }
 
 }

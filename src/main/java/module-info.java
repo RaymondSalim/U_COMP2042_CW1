@@ -12,4 +12,7 @@ module com.example.demo {
     opens com.example.demo.events to javafx.fxml;
     opens com.example.demo.controller to javafx.fxml;
     exports com.example.demo;
+    opens com.example.demo.view.objects to javafx.fxml;
+    opens com.example.demo.view.screens to javafx.fxml;
+    opens com.example.demo.view.screens.levels to javafx.fxml;
 }
