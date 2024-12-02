@@ -170,15 +170,16 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         if (enemySpawnDelay > 0) {
             enemySpawnDelay -= deltaTime; // Decrement the delay timer
             return; // Skip enemy spawning and other updates during delay
+        } else {
+            spawnEnemyUnits();
+            generateEnemyFire();
+            handleEnemyPenetration();
+            handleUserProjectileCollisions();
+            handleEnemyProjectileCollisions();
+            handleCollisions(userProjectiles, enemyProjectiles);
+            handlePlaneCollisions();
+            removeAllDestroyedActors();
         }
-        spawnEnemyUnits();
-        generateEnemyFire();
-        handleEnemyPenetration();
-        handleUserProjectileCollisions();
-        handleEnemyProjectileCollisions();
-        handleCollisions(userProjectiles, enemyProjectiles);
-        handlePlaneCollisions();
-        removeAllDestroyedActors();
 
         updateLevelView();
         checkPlayerHealth();
@@ -370,6 +371,13 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         user.stop();
     }
 
+    protected void updateProgressBar() {
+        levelView.updateProgress(
+                (double) spawnedEnemies / MAX_ENEMY_SPAWN,
+                0.2
+        );
+    }
+
     public void updateView(LevelView levelView, double deltaTime) {
         friendlyUnits.forEach(u -> levelView.updateActor(u, deltaTime));
         enemyUnits.forEach(u -> levelView.updateActor(u, deltaTime));
@@ -378,9 +386,6 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
         levelView.updateHealth(player.getHealth());
         levelView.updateScore(score);
-        levelView.updateProgress(
-                (double) spawnedEnemies / MAX_ENEMY_SPAWN,
-                0.2
-        );
+        updateProgressBar();
     }
 }

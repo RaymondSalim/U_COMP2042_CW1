@@ -1,20 +1,22 @@
 package com.example.demo.view.base;
 
-public abstract class FighterPlane extends ActiveActorDestructible {
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
-    private int health;
+public abstract class FighterPlane extends ActiveActorDestructible {
+    private final IntegerProperty healthProperty;
 
     public FighterPlane(String imageName, int imageHeight, double initialXPos, double initialYPos, int health) {
         super(imageName, imageHeight, initialXPos, initialYPos);
-        this.health = health;
+        this.healthProperty = new SimpleIntegerProperty(health);
     }
 
     public abstract ActiveActorDestructible fireProjectile();
 
     @Override
     public void takeDamage() {
-        health--;
-        if (healthAtZero()) {
+        healthProperty.set(healthProperty.get() - 1); // todo!
+        if (healthProperty.get() == 0) {
             this.destroy();
         }
     }
@@ -27,12 +29,7 @@ public abstract class FighterPlane extends ActiveActorDestructible {
         return getLayoutY() + getTranslateY() + yPositionOffset;
     }
 
-    private boolean healthAtZero() {
-        return health == 0;
+    public IntegerProperty getHealthProperty() {
+        return healthProperty;
     }
-
-    public int getHealth() {
-        return health;
-    }
-
 }

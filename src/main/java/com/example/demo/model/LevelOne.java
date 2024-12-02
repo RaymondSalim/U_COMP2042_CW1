@@ -78,6 +78,7 @@ public class LevelOne extends LevelParent {
                         spawnEnemy(); // Spawn one enemy for the tutorial
                     }
                     phaseComplete = getUser().getKillCount() == 1;
+                    super.updateScene(deltaTime);
                 } else {
                     levelView.deleteMessage();
                     transitionToNextPhase(); // Transition to next phase, now to level completion

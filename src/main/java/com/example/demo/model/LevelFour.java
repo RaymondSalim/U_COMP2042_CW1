@@ -11,6 +11,11 @@ public class LevelFour extends LevelParent {
     public LevelFour() {
         super(PLAYER_INITIAL_HEALTH);
         boss = new Boss();
+
+        getLevelView().updateProgress(
+                1,
+                0.2
+        );
     }
 
     @Override
@@ -31,8 +36,14 @@ public class LevelFour extends LevelParent {
     }
 
     @Override
-    public void updateScene(double deltaTime) {
-        super.updateScene(deltaTime);
+    protected void updateProgressBar() {
+        int maxHealth = boss.getMaxHealth();
+        boss.getHealthProperty().addListener((observable, oldValue, newValue) -> {
+            getLevelView().updateProgress(
+                    newValue.doubleValue() / maxHealth,
+                    0.2
+            );
+        });
     }
 
     @Override
