@@ -182,14 +182,16 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
         }
 
         updateLevelView();
-        checkPlayerHealth();
-        checkLevelCompleted();
+        boolean playerDestroyed = checkPlayerHealth();
+        if (!playerDestroyed) checkLevelCompleted();
     }
 
-    private void checkPlayerHealth() {
+    private boolean checkPlayerHealth() {
         if (player.isDestroyed()) {
             notifyEvent(GameState.GAME_OVER);
+            return true;
         }
+        return false;
     }
 
     protected void checkLevelCompleted() {
