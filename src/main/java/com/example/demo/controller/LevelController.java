@@ -132,28 +132,41 @@ public class LevelController implements GameStateObserver {
         startGame();
     }
 
-    private void initializeGameTimeline() {
-        if (gameTimeline == null) {
-            gameTimeline = new Timeline(new KeyFrame(Duration.millis(16), event -> {
-                long currentTime = System.nanoTime();
-                if (lastUpdateTime > 0) {
-                    double deltaTime = (currentTime - lastUpdateTime) / 1_000_000_000.0; // Convert nanoseconds to seconds
-                    updateGame(deltaTime);
-                }
-                lastUpdateTime = currentTime;
-            }));
-            gameTimeline.setCycleCount(Timeline.INDEFINITE);
+    private void initializeGameTimeline(double targetFPS) {
+        if (gameTimeline != null) {
+            gameTimeline.stop();
         }
+
+        double frameDuration = 1000.0 / targetFPS;
+        gameTimeline = new Timeline(new KeyFrame(Duration.millis(frameDuration), event -> {
+            long currentTime = System.nanoTime();
+            if (lastUpdateTime > 0) {
+                double deltaTime = (currentTime - lastUpdateTime) / 1_000_000_000.0; // Convert nanoseconds to seconds
+                updateGame(deltaTime);
+            }
+            lastUpdateTime = currentTime;
+        }));
+        gameTimeline.setCycleCount(Timeline.INDEFINITE);
+        gameTimeline.play();
     }
 
     private void updateGame(double deltaTime) {
         currentLevel.updateScene(deltaTime);
         currentLevel.updateView(currentLevelView, deltaTime);
+
+        // Calculate FPS and update it in LevelView
+        if (deltaTime > 0) {
+            double fps = 1.0 / deltaTime;
+            currentLevelView.updateFPS(fps);
+        }
     }
 
     public void startGame() {
-        initializeGameTimeline();
-        gameTimeline.play();
+        AppContext context = AppContext.getInstance();
+//        context.getTargetFPS().addListener((obs, oldVal, newVal) -> {
+//            initializeGameTimeline(newVal.doubleValue());
+//        }); TODO! Check if listener is necessary
+        initializeGameTimeline(context.getTargetFPS().doubleValue());
         pauseMenu.hide();
         uiController.hideOverlays();
     }

@@ -12,6 +12,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public abstract class LevelView {
@@ -19,11 +20,13 @@ public abstract class LevelView {
     private static final double HEART_DISPLAY_Y_POSITION = 25;
     private static final double PROGRESS_BAR_Y_POSITION = 40; // Y position for the progress bar
     private static final double SCORE_FONT_SIZE = 24;
+    private static final double FPS_FONT_SIZE = 16;
 
     private final Group root;
     private final HeartDisplay heartDisplay;
     private final Label scoreLabel;
     private final ProgressBar progressBar;
+    private final Text fpsText;
     private RollingBackground rollingBackground;
 
     public LevelView(Group root, int heartsToDisplay) {
@@ -34,7 +37,6 @@ public abstract class LevelView {
 
         // Initialize score label
         Font font = Font.loadFont(getClass().getResource("/com/example/demo/fonts/Audiowide/Audiowide.ttf").toExternalForm(), SCORE_FONT_SIZE);
-
         this.scoreLabel = new Label("Score: 0");
         this.scoreLabel.setFont(font);
         this.scoreLabel.setStyle("-fx-text-fill: white;");
@@ -42,6 +44,12 @@ public abstract class LevelView {
         // Initialize progress bar
         this.progressBar = new ProgressBar(0);
         this.progressBar.setPrefWidth(400); // Adjust width as needed
+
+        // Initialize FPS text
+        Font fpsFont = Font.font("Verdana", FPS_FONT_SIZE);
+        this.fpsText = new Text("FPS: 0");
+        this.fpsText.setFont(fpsFont);
+        this.fpsText.setStyle("-fx-fill: white;");
     }
 
     protected void initializeBackground(Image... backgroundImages) {
@@ -60,10 +68,15 @@ public abstract class LevelView {
         healthAndScoreBox.getChildren().addAll(heartDisplay.getContainer(), scoreLabel);
         root.getChildren().add(healthAndScoreBox);
 
-        // Top-bottom or top-center: Progress bar
+        // Top-center: Progress bar
         progressBar.setLayoutX(((double) context.getScreenWidth() / 2) - 200); // Center horizontally
         progressBar.setLayoutY(PROGRESS_BAR_Y_POSITION);
         root.getChildren().add(progressBar);
+
+        // Bottom-right: FPS text
+        fpsText.setLayoutX(context.getScreenWidth() - 100);
+        fpsText.setLayoutY(context.getScreenHeight() - 50);
+        root.getChildren().add(fpsText);
     }
 
     public void reset() {
@@ -91,6 +104,12 @@ public abstract class LevelView {
                 )
         );
         timeline.play();
+    }
+
+    public void updateFPS(double fps) {
+        AppContext context = AppContext.getInstance();
+        fps = Math.min(context.getTargetFPS().doubleValue(), fps);
+        fpsText.setText(String.format("FPS: %.0f", fps));
     }
 
     public void addActor(ActiveActorDestructible actor) {
