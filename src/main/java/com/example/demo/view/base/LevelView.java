@@ -108,7 +108,7 @@ public abstract class LevelView {
 
     public void updateFPS(double fps) {
         AppContext context = AppContext.getInstance();
-        fps = Math.max(context.getTargetFPS().doubleValue(), fps);
+        fps = Math.min(context.getTargetFPS().doubleValue(), fps);
         fpsText.setText(String.format("FPS: %.0f", fps));
     }
 
