@@ -175,6 +175,7 @@ public class LevelController implements GameStateObserver {
         if (gameTimeline != null) {
             gameTimeline.pause();
             currentLevel.pause();
+            pauseMenu.updateScore(currentLevel.getScore());
             pauseMenu.show();
 
             lastUpdateTime = 0;
