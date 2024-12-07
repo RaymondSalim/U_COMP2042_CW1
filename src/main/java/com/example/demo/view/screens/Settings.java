@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -39,7 +40,7 @@ public class Settings {
         );
         layout.setBackground(background);
 
-        // ImageCheckbox for FPS Selection
+        // FPS Selection
         ImageCheckbox fps30Checkbox = new ImageCheckbox(context.getTargetFPS().doubleValue() == 30.0f);
         ImageCheckbox fps60Checkbox = new ImageCheckbox(context.getTargetFPS().doubleValue() == 60.0f);
 
@@ -86,17 +87,35 @@ public class Settings {
         fpsBox.setAlignment(Pos.CENTER);
         fpsBox.getChildren().addAll(fpsLabel, fpsOptionBox1, fpsOptionBox2);
 
+        // Volume Adjustment
+        Label volumeLabel = new Label("Volume:");
+        volumeLabel.setStyle("-fx-text-fill: white;");
+        volumeLabel.setFont(font);
+
+        Slider volumeSlider = new Slider(0, 100, context.getVolume());
+        volumeSlider.setMajorTickUnit(25);
+        volumeSlider.setMinorTickCount(4);
+        volumeSlider.setBlockIncrement(10);
+        volumeSlider.setPrefWidth(400);
+        volumeSlider.setPrefHeight(35);
+        volumeSlider.valueProperty().bindBidirectional(context.volumeProperty());
+
+        HBox volumeBox = new HBox(20, volumeLabel, volumeSlider);
+        volumeBox.setAlignment(Pos.CENTER);
+
+        // Back Button
         ImageButton backButton = new ImageButton(SHARED_RESOURCE_FOLDER + "/backButton.png");
         backButton.setPreserveRatio(true);
-        backButton.setFitWidth(50); // Set a fixed width for the back button
-        backButton.setOnMouseClicked(e -> {
-            navigationHandler.showMenuScreen();
-        });
+        backButton.setFitWidth(50);
+        backButton.setOnMouseClicked(e -> navigationHandler.showMenuScreen());
         StackPane.setMargin(backButton, new Insets(20, 0, 0, 20));
         StackPane.setAlignment(backButton, Pos.TOP_LEFT);
 
-        layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(fpsBox, backButton);
+        // Layout
+        VBox settingsBox = new VBox(30, fpsBox, volumeBox);
+        settingsBox.setAlignment(Pos.CENTER);
+
+        layout.getChildren().addAll(settingsBox, backButton);
 
         return new Scene(layout, context.getScreenWidth(), context.getScreenHeight());
     }

@@ -1,5 +1,7 @@
 package com.example.demo.view.objects;
 
+import com.example.demo.audio.AudioEnum;
+import com.example.demo.audio.AudioManager;
 import com.example.demo.context.AppContext;
 import com.example.demo.model.Player;
 import com.example.demo.observer.ScreenSizeObserver;
@@ -66,6 +68,8 @@ public class UserPlane extends FighterPlane implements ScreenSizeObserver {
 
     @Override
     public ActiveActorDestructible fireProjectile() {
+        AudioManager manager = AudioManager.getInstance();
+        manager.playSoundEffect(AudioEnum.PLAYER_SHOOT, false);
         return new UserProjectile(PROJECTILE_X_POSITION, getProjectileYPosition(PROJECTILE_Y_POSITION_OFFSET));
     }
 

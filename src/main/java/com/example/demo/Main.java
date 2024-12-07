@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.audio.AudioEnum;
+import com.example.demo.audio.AudioManager;
 import com.example.demo.context.AppContext;
 import com.example.demo.controller.GameController;
 import com.example.demo.observer.ScreenSizeObserver;
@@ -29,11 +31,15 @@ public class Main extends Application implements ScreenSizeObserver {
         context.addGameStateObserver(this);
         context.setScreenSize(SCREEN_HEIGHT, SCREEN_WIDTH);
 
-
         stage.setTitle(TITLE);
         stage.setResizable(true);
         stage.setMinWidth(MIN_SCREEN_WIDTH);
         stage.setMinHeight(MIN_SCREEN_HEIGHT);
+
+        AudioManager audioManager = AudioManager.getInstance();
+        audioManager.preloadSounds();
+        audioManager.setBackgroundMusic(AudioEnum.BG_MUSIC);
+        audioManager.playBackgroundMusic();
 
         stage.widthProperty().addListener((observable, oldValue, newValue) -> {
             context.setScreenSize(context.getScreenHeight(), newValue.intValue());

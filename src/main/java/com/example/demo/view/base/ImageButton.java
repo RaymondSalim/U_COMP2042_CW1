@@ -1,5 +1,7 @@
 package com.example.demo.view.base;
 
+import com.example.demo.audio.AudioEnum;
+import com.example.demo.audio.AudioManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ScaleTransition;
@@ -31,7 +33,11 @@ public class ImageButton extends ImageView {
         releaseTransition.setToX(1.0);
         releaseTransition.setToY(1.0);
 
-        this.setOnMousePressed(event -> pressTransition.playFromStart());
+
+        this.setOnMousePressed(event -> {
+            pressTransition.playFromStart();
+            playAudio();
+        });
         this.setOnMouseReleased(event -> releaseTransition.playFromStart());
     }
 
@@ -51,5 +57,10 @@ public class ImageButton extends ImageView {
             hoverEnterTimeline.playFromStart();
         });
         this.setOnMouseExited(event -> hoverExitTimeline.playFromStart());
+    }
+
+    protected void playAudio() {
+        AudioManager manager = AudioManager.getInstance();
+        manager.playSoundEffect(AudioEnum.BUTTON_CLICK, false);
     }
 }

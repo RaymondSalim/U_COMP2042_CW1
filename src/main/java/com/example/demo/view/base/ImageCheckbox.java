@@ -1,5 +1,7 @@
 package com.example.demo.view.base;
 
+import com.example.demo.audio.AudioEnum;
+import com.example.demo.audio.AudioManager;
 import javafx.scene.image.Image;
 
 public class ImageCheckbox extends ImageButton {
@@ -17,6 +19,12 @@ public class ImageCheckbox extends ImageButton {
         this.isChecked = initialState;
 
         this.setOnMouseClicked(event -> toggle());
+    }
+
+    @Override
+    protected void playAudio() {
+        AudioManager manager = AudioManager.getInstance();
+        manager.playSoundEffect(AudioEnum.CHECKBOX_TOGGLE, false);
     }
 
     public void toggle() {

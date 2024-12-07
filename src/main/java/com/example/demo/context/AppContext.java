@@ -1,6 +1,7 @@
 package com.example.demo.context;
 
 import com.example.demo.observer.ScreenSizeObservable;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class AppContext extends ScreenSizeObservable {
@@ -8,10 +9,12 @@ public class AppContext extends ScreenSizeObservable {
 
     private int screenHeight;
     private int screenWidth;
-    private SimpleIntegerProperty targetFPS;
+    private final SimpleIntegerProperty targetFPS;
+    private final SimpleDoubleProperty volume;
 
     private AppContext() {
         this.targetFPS = new SimpleIntegerProperty(60);
+        this.volume = new SimpleDoubleProperty(50);
     }
 
     public static AppContext getInstance() {
@@ -41,5 +44,17 @@ public class AppContext extends ScreenSizeObservable {
 
     public void setTargetFPS(int fps) {
         this.targetFPS.set(fps);
+    }
+
+    public SimpleDoubleProperty volumeProperty() {
+        return volume;
+    }
+
+    public double getVolume() {
+        return volume.get();
+    }
+
+    public void setVolume(double volume) {
+        this.volume.set(volume);
     }
 }

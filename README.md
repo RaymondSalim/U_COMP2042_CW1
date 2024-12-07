@@ -36,8 +36,12 @@ Additional game assets are obtained and edited based from the following links
 - https://craftpix.net/freebies/free-space-shooter-game-gui/
 - https://craftpix.net/freebies/free-sky-with-clouds-background-pixel-art-set/
 - https://craftpix.net/freebies/free-space-shooter-game-objects/
+- https://www.kenney.nl/assets/interface-sounds
+- https://www.kenney.nl/assets/sci-fi-sounds
+- https://onemansymphony.bandcamp.com/album/reflective-district-vol-2-free
 
-The license for the additional assets can be found [here](https://craftpix.net/file-licenses/).
+The license for the additional assets can be found [here](https://craftpix.net/file-licenses/)
+and [here](https://creativecommons.org/publicdomain/zero/1.0/).
 
 # Changes
 Here is the list of (hopefully) all the changes made

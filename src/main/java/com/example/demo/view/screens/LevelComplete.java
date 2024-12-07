@@ -1,5 +1,7 @@
 package com.example.demo.view.screens;
 
+import com.example.demo.audio.AudioEnum;
+import com.example.demo.audio.AudioManager;
 import com.example.demo.context.AppContext;
 import com.example.demo.observer.ScreenSizeObserver;
 import com.example.demo.view.base.ImageButton;
@@ -139,6 +141,8 @@ public class LevelComplete implements ScreenSizeObserver {
     }
 
     private void glowStars() {
+        AudioManager manager = AudioManager.getInstance();
+        AudioEnum[] audios = new AudioEnum[]{AudioEnum.STAR_1, AudioEnum.STAR_2, AudioEnum.STAR_3};
         for (int i = 0; i < starCount; i++) {
             ImageView star = stars[i];
 
@@ -146,7 +150,9 @@ public class LevelComplete implements ScreenSizeObserver {
             PauseTransition delay = new PauseTransition(Duration.seconds(i * 0.5)); // Delay increases for each star
 
             // After the delay, set the glowing image and play the animation
+            int finalI = i;
             delay.setOnFinished(event -> {
+                manager.playSoundEffect(audios[finalI], false);
                 star.setImage(new Image(getClass().getResource(GLOWING_STAR_IMAGE).toExternalForm()));
 
                 // Add a glowing animation
