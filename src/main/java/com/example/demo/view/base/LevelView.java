@@ -69,13 +69,13 @@ public abstract class LevelView {
         root.getChildren().add(healthAndScoreBox);
 
         // Top-center: Progress bar
-        progressBar.setLayoutX(((double) context.getScreenWidth() / 2) - 200); // Center horizontally
+        progressBar.layoutXProperty().bind(context.getScreenWidthPropertyProperty().divide(2).subtract(200));
         progressBar.setLayoutY(PROGRESS_BAR_Y_POSITION);
         root.getChildren().add(progressBar);
 
         // Bottom-right: FPS text
-        fpsText.setLayoutX(context.getScreenWidth() - 100);
-        fpsText.setLayoutY(context.getScreenHeight() - 50);
+        fpsText.layoutXProperty().bind(context.getScreenWidthPropertyProperty().subtract(100));
+        fpsText.layoutYProperty().bind(context.getScreenHeightPropertyProperty().subtract(50));
         root.getChildren().add(fpsText);
     }
 

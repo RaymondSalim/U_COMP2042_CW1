@@ -47,7 +47,7 @@ public class Settings {
         List<ImageButton> fpsButtons = Arrays.asList(fps30Checkbox, fps60Checkbox);
         fpsButtons.forEach(b -> {
             b.setPreserveRatio(true);
-            b.setFitWidth(context.getScreenWidth() * 0.06);
+            b.fitWidthProperty().bind(context.getScreenWidthPropertyProperty().multiply(0.06));
             b.minWidth(50);
         });
 
@@ -117,6 +117,6 @@ public class Settings {
 
         layout.getChildren().addAll(settingsBox, backButton);
 
-        return new Scene(layout, context.getScreenWidth(), context.getScreenHeight());
+        return new Scene(layout, context.getScreenWidthPropertyProperty().get(), context.getScreenHeightPropertyProperty().get());
     }
 }

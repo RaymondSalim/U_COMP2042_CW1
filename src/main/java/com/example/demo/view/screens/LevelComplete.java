@@ -3,7 +3,6 @@ package com.example.demo.view.screens;
 import com.example.demo.audio.AudioEnum;
 import com.example.demo.audio.AudioManager;
 import com.example.demo.context.AppContext;
-import com.example.demo.observer.ScreenSizeObserver;
 import com.example.demo.view.base.ImageButton;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -20,7 +19,7 @@ import javafx.util.Duration;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class LevelComplete implements ScreenSizeObserver {
+public class LevelComplete {
     private static final int TEXT_FONT_SIZE = 24; // Increased font size
     private final String BG_IMAGE = "/com/example/demo/images/levelComplete/levelComplete.png";
     private final String STAR_IMAGE = "/com/example/demo/images/levelComplete/star.png";
@@ -42,15 +41,11 @@ public class LevelComplete implements ScreenSizeObserver {
         bgImageFile = new Image(getClass().getResource(BG_IMAGE).toExternalForm());
 
         AppContext context = AppContext.getInstance();
-        context.addGameStateObserver(this);
-
-        double height = context.getScreenHeight() * 0.65;
         double aspectRatio = bgImageFile.getWidth() / bgImageFile.getHeight();
-        double width = height * aspectRatio;
 
         menu = new VBox();
-        menu.setMaxHeight(height);
-        menu.setMaxWidth(width);
+        menu.maxHeightProperty().bind(context.getScreenHeightPropertyProperty().multiply(0.65));
+        menu.maxWidthProperty().bind(context.getScreenHeightPropertyProperty().multiply(0.65).multiply(aspectRatio));
         menu.setAlignment(Pos.CENTER);
         menu.setPadding(new Insets(50, 10, 20, 10));
 
@@ -174,16 +169,6 @@ public class LevelComplete implements ScreenSizeObserver {
             ImageView star = stars[i];
             star.setImage(new Image(getClass().getResource(STAR_IMAGE).toExternalForm()));
         }
-    }
-
-    @Override
-    public void onScreenSizeChanged(int newHeight, int newWidth) {
-        double height = newHeight * 0.65;
-        double aspectRatio = bgImageFile.getWidth() / bgImageFile.getHeight();
-        double width = height * aspectRatio;
-
-        menu.setMaxHeight(height);
-        menu.setMaxWidth(width);
     }
 
     public Pane getPane() {

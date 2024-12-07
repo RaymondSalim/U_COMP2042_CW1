@@ -117,9 +117,6 @@ public class LevelController implements GameStateObserver {
         currentLevel = LevelFactory.createLevel(levelType);
         currentLevel.addGameStateObserver(this);
 
-        AppContext context = AppContext.getInstance();
-        context.addGameStateObserver(currentLevel);
-
         currentLevelView = currentLevel.getLevelView();
         StackPane mainLayout = new StackPane(currentLevelView.getRoot());
 

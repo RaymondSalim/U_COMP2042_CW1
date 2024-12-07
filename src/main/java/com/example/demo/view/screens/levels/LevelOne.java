@@ -36,7 +36,7 @@ public class LevelOne extends LevelView {
         messageText.setFont(font);
         messageText.setFill(Color.WHITE);
         messageText.setStyle("-fx-font-size: 28px;");
-        messageText.setWrappingWidth(context.getScreenWidth() * 0.8); // Set wrapping width to 80% of the screen
+        messageText.wrappingWidthProperty().bind(context.getScreenWidthPropertyProperty().multiply(0.8));
         StackPane.setAlignment(messageText, Pos.CENTER);
 
         // Create a semi-transparent background for the text box
@@ -50,10 +50,10 @@ public class LevelOne extends LevelView {
         messageContainer = new StackPane();
         messageContainer.setBackground(new Background(backgroundFill));
         messageContainer.setVisible(false);
-        messageContainer.setPrefWidth(context.getScreenWidth());
-        messageContainer.setPrefHeight(context.getScreenHeight() * 0.25);
+        messageContainer.prefWidthProperty().bind(context.getScreenWidthPropertyProperty());
+        messageContainer.prefHeightProperty().bind(context.getScreenHeightPropertyProperty().multiply(0.25));
         messageContainer.setLayoutX(0);
-        messageContainer.setLayoutY(context.getScreenHeight() * 0.75);
+        messageContainer.layoutYProperty().bind(context.getScreenHeightPropertyProperty().multiply(0.75));
         messageContainer.setAlignment(Pos.CENTER);
         messageContainer.setPadding(new Insets(20));
         messageContainer.getChildren().add(messageText);

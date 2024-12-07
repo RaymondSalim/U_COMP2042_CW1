@@ -1,7 +1,6 @@
 package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
-import com.example.demo.observer.ScreenSizeObserver;
 import com.example.demo.view.base.ImageButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
-public class PauseMenu implements ScreenSizeObserver {
+public class PauseMenu {
     private final String BG_IMAGE = "/com/example/demo/images/pauseMenu/pauseWindow.png";
     private final VBox menu;
 
@@ -27,15 +26,11 @@ public class PauseMenu implements ScreenSizeObserver {
         bgImageFile = new Image(getClass().getResource(BG_IMAGE).toExternalForm());
 
         AppContext context = AppContext.getInstance();
-        context.addGameStateObserver(this);
-
-        double height = context.getScreenHeight() * 0.65;
         double aspectRatio = bgImageFile.getWidth() / bgImageFile.getHeight();
-        double width = height * aspectRatio;
 
         menu = new VBox(20);
-        menu.setMaxHeight(height);
-        menu.setMaxWidth(width);
+        menu.maxHeightProperty().bind(context.getScreenHeightPropertyProperty().multiply(0.65));
+        menu.maxWidthProperty().bind(context.getScreenHeightPropertyProperty().multiply(0.65).multiply(aspectRatio));
         menu.setPadding(new Insets(20));
         menu.setAlignment(Pos.TOP_CENTER);
 
@@ -109,16 +104,6 @@ public class PauseMenu implements ScreenSizeObserver {
 
     public void updateScore(int score) {
         scoreLabel.setText("Score: " + score);
-    }
-
-    @Override
-    public void onScreenSizeChanged(int newHeight, int newWidth) {
-        double height = newHeight * 0.65;
-        double aspectRatio = bgImageFile.getWidth() / bgImageFile.getHeight();
-        double width = height * aspectRatio;
-
-        menu.setMaxHeight(height);
-        menu.setMaxWidth(width);
     }
 
     public Pane getPane() {

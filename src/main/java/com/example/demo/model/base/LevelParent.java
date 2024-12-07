@@ -6,19 +6,19 @@ import com.example.demo.enums.GameState;
 import com.example.demo.enums.LevelType;
 import com.example.demo.model.Player;
 import com.example.demo.observer.GameStateObservable;
-import com.example.demo.observer.ScreenSizeObserver;
 import com.example.demo.view.base.ActiveActorDestructible;
 import com.example.demo.view.base.FighterPlane;
 import com.example.demo.view.base.LevelView;
 import com.example.demo.view.objects.EnemyPlane;
 import com.example.demo.view.objects.UserPlane;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class LevelParent extends GameStateObservable implements ScreenSizeObserver {
+public abstract class LevelParent extends GameStateObservable {
     protected int MAX_ENEMIES_AT_A_TIME = 5;
     protected int MAX_ENEMY_SPAWN;
     protected double ENEMY_SPAWN_PROBABILITY = .20;
@@ -26,9 +26,9 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     protected LevelType NEXT_LEVEL;
 
     private static final double BOTTOM_MARGIN = 150;
-    private double screenHeight;
-    private double screenWidth;
-    private double enemyMaximumYPosition;
+    private final SimpleDoubleProperty screenHeight;
+    private final SimpleDoubleProperty screenWidth;
+    private final SimpleDoubleProperty enemyMaximumYPosition;
 
     private final Group root;
     private final UserPlane user;
@@ -45,22 +45,28 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     private int spawnedEnemies = 0;
     private double enemySpawnDelay = ENEMY_SPAWN_DELAY;
+
     public LevelParent(int playerInitialHealth) {
         this.root = new Group();
         root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
         root.layoutYProperty().addListener((obs, oldVal, newVal) -> root.setLayoutY(0));
 
-        AppContext context = AppContext.getInstance();
-        this.screenHeight = context.getScreenHeight();
-        this.screenWidth = context.getScreenWidth();
-
-        this.enemyMaximumYPosition = screenHeight - BOTTOM_MARGIN;
-        this.levelView = instantiateLevelView();
-
         this.friendlyUnits = new ArrayList<>();
         this.enemyUnits = new ArrayList<>();
         this.userProjectiles = new ArrayList<>();
         this.enemyProjectiles = new ArrayList<>();
+
+        AppContext context = AppContext.getInstance();
+        this.screenHeight = new SimpleDoubleProperty();
+        this.screenHeight.addListener(e -> repositionOutOfBoundsActors());
+        this.screenHeight.bind(context.getScreenHeightPropertyProperty());
+        this.screenWidth = new SimpleDoubleProperty();
+        this.screenHeight.addListener(e -> repositionOutOfBoundsActors());
+        this.screenWidth.bind(context.getScreenWidthPropertyProperty());
+
+        this.enemyMaximumYPosition = new SimpleDoubleProperty();
+        this.enemyMaximumYPosition.bind(this.screenHeight.subtract(BOTTOM_MARGIN));
+        this.levelView = instantiateLevelView();
 
         this.player = new Player(playerInitialHealth);
         this.user = new UserPlane(player);
@@ -92,20 +98,11 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
     protected abstract int calculateStars(int score);
 
-    @Override
-    public void onScreenSizeChanged(int newHeight, int newWidth) {
-        this.screenHeight = newHeight;
-        this.screenWidth = newWidth;
-
-        this.enemyMaximumYPosition = this.screenHeight - BOTTOM_MARGIN;
-        repositionOutOfBoundsActors();
-    }
-
     private void repositionOutOfBoundsActors() {
         for (ActiveActorDestructible enemy : enemyUnits) {
             double enemyYPosition = enemy.getLayoutY() + enemy.getTranslateY();
-            if (enemyYPosition > enemyMaximumYPosition) {
-                enemy.setTranslateY(enemyMaximumYPosition - enemy.getLayoutY()); // Move back within bounds
+            if (enemyYPosition > enemyMaximumYPosition.get()) {
+                enemy.setTranslateY(enemyMaximumYPosition.subtract(enemy.getLayoutY()).get()); // Move back within bounds
             } else if (enemyYPosition < 0) {
                 enemy.setTranslateY(-enemy.getLayoutY()); // Move to the top bound
             }
@@ -117,7 +114,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
         for (ActiveActorDestructible projectile : projectiles) {
             double projectileYPosition = projectile.getLayoutY() + projectile.getTranslateY();
-            if (projectileYPosition > screenHeight || projectileYPosition < 0) {
+            if (projectileYPosition > screenHeight.get() || projectileYPosition < 0) {
                 projectile.destroy();
             }
         }
@@ -234,8 +231,8 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
 
         for (int i = 0; i < enemiesToSpawn; i++) {
             if (spawnedEnemies < MAX_ENEMY_SPAWN && Math.random() < ENEMY_SPAWN_PROBABILITY) {
-                double newEnemyYPos = Math.random() * enemyMaximumYPosition;
-                ActiveActorDestructible newEnemy = new EnemyPlane(screenWidth, newEnemyYPos);
+                double newEnemyYPos = Math.random() * enemyMaximumYPosition.get();
+                ActiveActorDestructible newEnemy = new EnemyPlane(screenWidth.get(), newEnemyYPos);
                 addEnemyUnit(newEnemy);
                 spawnedEnemies++;
             }
@@ -288,7 +285,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
             for (ActiveActorDestructible enemy : enemyUnits) {
                 // Check if the projectile is out of bounds along the X-axis
                 double projectileX = projectile.getLayoutX() + projectile.getTranslateX();
-                if (projectileX < 0 || projectileX > screenWidth) {
+                if (projectileX < 0 || projectileX > screenWidth.get()) {
                     projectilesToRemove.add(projectile);
                     continue; // Skip collision checks for out-of-bounds projectiles
                 }
@@ -329,7 +326,7 @@ public abstract class LevelParent extends GameStateObservable implements ScreenS
     }
 
     private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {
-        return Math.abs(enemy.getTranslateX()) > screenWidth;
+        return Math.abs(enemy.getTranslateX()) > screenWidth.get();
     }
 
     private void handleEnemyPenetration() {
