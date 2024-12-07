@@ -30,8 +30,8 @@ public class LevelSelect {
     public Scene createScene() {
         AppContext context = AppContext.getInstance();
         StackPane root = new StackPane();
-        root.setPrefWidth(context.getScreenWidth());
-        root.setPrefHeight(context.getScreenHeight());
+        root.prefWidthProperty().bind(context.getScreenWidthPropertyProperty());
+        root.prefHeightProperty().bind(context.getScreenHeightPropertyProperty());
 
         // Main Background
         Image backgroundImage = new Image(getClass().getResource(SHARED_RESOURCE_FOLDER + "/bg.png").toExternalForm());
@@ -86,6 +86,6 @@ public class LevelSelect {
 
         root.getChildren().addAll(backgroundImageView, containerImageView, mainButtonsPane, backButton);
 
-        return new Scene(root, context.getScreenWidth(), context.getScreenHeight());
+        return new Scene(root, context.getScreenWidthPropertyProperty().get(), context.getScreenHeightPropertyProperty().get());
     }
 }

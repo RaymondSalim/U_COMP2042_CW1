@@ -37,14 +37,14 @@ public class MenuScreen {
         // Background
         Image backgroundImage = new Image(getClass().getResource(MENU_ASSETS_FOLDER + "/bg.png").toExternalForm());
         ImageView backgroundImageView = new ImageView(backgroundImage);
-        backgroundImageView.setFitWidth(context.getScreenWidth());
-        backgroundImageView.setFitHeight(context.getScreenHeight());
+        backgroundImageView.fitWidthProperty().bind(context.getScreenWidthPropertyProperty());
+        backgroundImageView.fitHeightProperty().bind(context.getScreenHeightPropertyProperty());
 
         // Title
         Image titleImage = new Image(getClass().getResource(MENU_ASSETS_FOLDER + "/1942.png").toExternalForm());
         ImageView titleImageView = new ImageView(titleImage);
         titleImageView.setPreserveRatio(true);
-        titleImageView.setFitWidth(context.getScreenWidth() * 0.4);
+        titleImageView.fitWidthProperty().bind(context.getScreenWidthPropertyProperty().multiply(0.4));
 
         // Main Buttons
         ImageButton startButton = new ImageButton(MENU_ASSETS_FOLDER + "/start2.png");
@@ -54,7 +54,7 @@ public class MenuScreen {
         List<ImageButton> mainButtons = Arrays.asList(startButton, settingsButton, exitButton);
         mainButtons.forEach(b -> {
             b.setPreserveRatio(true);
-            b.setFitWidth(context.getScreenWidth() * 0.15);
+            b.fitWidthProperty().bind(context.getScreenWidthPropertyProperty().multiply(0.15));
             b.minWidth(150);
         });
 
@@ -77,8 +77,8 @@ public class MenuScreen {
         centerPane.setAlignment(Pos.CENTER);
 
         StackPane root = new StackPane();
-        root.setPrefWidth(context.getScreenWidth());
-        root.setPrefHeight(context.getScreenHeight());
+        root.prefWidthProperty().bind(context.getScreenWidthPropertyProperty());
+        root.prefHeightProperty().bind(context.getScreenHeightPropertyProperty());
 
         // Random Meteor
         Pane meteorPane = new Pane();
@@ -90,7 +90,7 @@ public class MenuScreen {
         root.getChildren().addAll(backgroundImageView, meteorPane, centerPane, creditsButton);
         StackPane.setAlignment(centerPane, Pos.CENTER);
 
-        return new Scene(root, context.getScreenWidth(), context.getScreenHeight());
+        return new Scene(root, context.getScreenWidthPropertyProperty().get(), context.getScreenHeightPropertyProperty().get());
     }
 
     private void spawnMeteor(Random random, Pane root, AppContext context) {
@@ -110,15 +110,15 @@ public class MenuScreen {
         meteor.setFitWidth(100);
         meteor.setPreserveRatio(true);
 
-        double initialX = -100 + random.nextDouble() * (context.getScreenWidth() + 200);
+        double initialX = -100 + random.nextDouble() * (context.getScreenWidthPropertyProperty().get() + 200);
         double initialY = -100;
         meteor.setLayoutX(initialX);
         meteor.setLayoutY(initialY);
 
         root.getChildren().add(meteor);
 
-        double targetX = random.nextDouble() * (context.getScreenWidth() + 200) - 100;
-        double targetY = context.getScreenHeight() + 100;
+        double targetX = random.nextDouble() * (context.getScreenWidthPropertyProperty().get() + 200) - 100;
+        double targetY = context.getScreenHeightPropertyProperty().get() + 100;
         double distanceX = targetX - initialX;
         double distanceY = targetY - initialY;
         double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);

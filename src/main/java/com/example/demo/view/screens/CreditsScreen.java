@@ -79,7 +79,7 @@ public class CreditsScreen {
         creditsContainer.getChildren().addAll(titleImageView, creditsLabel);
 
         AppContext context = AppContext.getInstance();
-        creditsContainer.setTranslateY(context.getScreenHeight() / 3.0 * 2); // Start at the bottom of the screen
+        creditsContainer.translateYProperty().bind(context.getScreenHeightPropertyProperty().divide(3).multiply(2));
         mainContainer.getChildren().addAll(creditsContainer);
     }
 

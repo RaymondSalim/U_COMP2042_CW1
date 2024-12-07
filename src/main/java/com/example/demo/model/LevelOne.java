@@ -120,7 +120,7 @@ public class LevelOne extends LevelParent {
         return getUserProjectiles().stream()
                 .allMatch(projectile -> {
                     double projectileX = projectile.getLayoutX() + projectile.getTranslateX();
-                    return projectileX > AppContext.getInstance().getScreenWidth() / 2.0;
+                    return projectileX > AppContext.getInstance().getScreenWidthPropertyProperty().divide(2).get();
                 });
     }
 
@@ -133,8 +133,8 @@ public class LevelOne extends LevelParent {
     private void spawnEnemy() {
         hasSpawned = true;
         // Spawn one enemy plane in the tutorial
-        double enemyInitialY = AppContext.getInstance().getScreenHeight() / 3.0; // Position enemy at 1/3 screen height
-        EnemyPlane enemy = new EnemyPlane(AppContext.getInstance().getScreenWidth(), enemyInitialY);
+        double enemyInitialY = AppContext.getInstance().getScreenHeightPropertyProperty().divide(3).get(); // Position enemy at 1/3 screen height
+        EnemyPlane enemy = new EnemyPlane(AppContext.getInstance().getScreenWidthPropertyProperty().get(), enemyInitialY);
         addEnemyUnit(enemy);
     }
 }
