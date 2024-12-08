@@ -2,8 +2,14 @@ package com.example.demo.controller;
 
 import com.example.demo.enums.GameState;
 import com.example.demo.observer.GameStateObservable;
-import com.example.demo.view.base.NavigationHandler;
-import com.example.demo.view.screens.*;
+import com.example.demo.view.overlays.GameOverOverlay;
+import com.example.demo.view.overlays.LevelCompleteOverlay;
+import com.example.demo.view.overlays.PauseMenuOverlay;
+import com.example.demo.view.screens.CreditsScreen;
+import com.example.demo.view.screens.LevelSelectScreen;
+import com.example.demo.view.screens.MenuScreen;
+import com.example.demo.view.screens.SettingsScreen;
+import com.example.demo.view.utils.NavigationHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,9 +26,9 @@ public class UIController extends GameStateObservable {
     private Scene settingsScene;
     private Scene creditsScene;
 
-    private LevelComplete levelCompleteOverlay;
-    private GameOver gameOverOverlay;
-    private PauseMenu pauseOverlay;
+    private LevelCompleteOverlay levelCompleteOverlay;
+    private GameOverOverlay gameOverOverlay;
+    private PauseMenuOverlay pauseOverlay;
     private CreditsScreen creditsScreen;
 
     public UIController(Stage stage, NavigationHandler navigationHandler) {
@@ -36,25 +42,25 @@ public class UIController extends GameStateObservable {
         MenuScreen menuScreen = new MenuScreen(navigationHandler);
         menuScene = menuScreen.createScene();
 
-        LevelSelect levelSelect = new LevelSelect(navigationHandler);
-        levelSelectScene = levelSelect.createScene();
+        LevelSelectScreen levelSelectScreen = new LevelSelectScreen(navigationHandler);
+        levelSelectScene = levelSelectScreen.createScene();
 
-        Settings settingsScreen = new Settings(navigationHandler);
+        SettingsScreen settingsScreen = new SettingsScreen(navigationHandler);
         settingsScene = settingsScreen.createScene();
 
         creditsScreen = new CreditsScreen(navigationHandler);
         creditsScene = creditsScreen.createScene();
     }
 
-    public void setPauseMenu(PauseMenu pauseMenu) {
-        this.pauseOverlay = pauseMenu;
+    public void setPauseMenu(PauseMenuOverlay pauseMenuOverlay) {
+        this.pauseOverlay = pauseMenuOverlay;
     }
 
-    public void setGameOver(GameOver gameOver) {
-        this.gameOverOverlay = gameOver;
+    public void setGameOver(GameOverOverlay gameOverOverlay) {
+        this.gameOverOverlay = gameOverOverlay;
     }
 
-    public void setLevelCompleteOverlay(LevelComplete levelCompleteOverlay) {
+    public void setLevelCompleteOverlay(LevelCompleteOverlay levelCompleteOverlay) {
         this.levelCompleteOverlay = levelCompleteOverlay;
     }
 

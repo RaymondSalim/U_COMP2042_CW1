@@ -1,20 +1,20 @@
-package com.example.demo.view.screens;
+package com.example.demo.view.overlays;
 
 import com.example.demo.context.AppContext;
-import com.example.demo.view.base.Constants;
-import com.example.demo.view.base.ImageButton;
+import com.example.demo.view.components.ImageButton;
+import com.example.demo.view.utils.Constants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
-public class GameOver {
+public class GameOverOverlay implements Overlay {
     private final String BG_IMAGE = "/com/example/demo/images/gameOverMenu/gameOverWindow.png";
 
     private VBox menu;
     private Image bgImageFile;
 
-    public GameOver(
+    public GameOverOverlay(
             Runnable onRestart,
             Runnable onLevelSelect
     ) {
@@ -66,14 +66,17 @@ public class GameOver {
         menu.setVisible(false);
     }
 
+    @Override
     public Pane getPane() {
         return menu;
     }
 
+    @Override
     public void show() {
         menu.setVisible(true);
     }
 
+    @Override
     public void hide() {
         menu.setVisible(false);
     }

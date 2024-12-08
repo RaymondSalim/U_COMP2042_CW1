@@ -1,8 +1,8 @@
 package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
-import com.example.demo.view.base.ImageButton;
-import com.example.demo.view.base.NavigationHandler;
+import com.example.demo.view.components.ImageButton;
+import com.example.demo.view.utils.NavigationHandler;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
@@ -16,9 +16,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-import static com.example.demo.view.base.Constants.SHARED_RESOURCE_FOLDER;
+import static com.example.demo.view.utils.Constants.SHARED_RESOURCE_FOLDER;
 
-public class CreditsScreen {
+public class CreditsScreen implements Screen {
     private final NavigationHandler navigationHandler;
     private final String CREDITS_TEXT = """
             DEVELOPED BY    RAYMOND SALIM
@@ -35,6 +35,7 @@ public class CreditsScreen {
         this.navigationHandler = navigationHandler;
     }
 
+    @Override
     public Scene createScene() {
         mainContainer = new StackPane();
         scene = new Scene(mainContainer);

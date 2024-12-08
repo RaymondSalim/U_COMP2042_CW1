@@ -4,8 +4,6 @@ module com.example.demo {
     requires javafx.media;
 
 
-    opens com.example.demo.view to javafx.fxml;
-    opens com.example.demo.view.base to javafx.fxml;
     opens com.example.demo.model to javafx.fxml;
     opens com.example.demo.model.base to javafx.fxml;
     opens com.example.demo.observer to javafx.fxml;
@@ -15,5 +13,9 @@ module com.example.demo {
     exports com.example.demo;
     opens com.example.demo.view.objects to javafx.fxml;
     opens com.example.demo.view.screens to javafx.fxml;
-    opens com.example.demo.view.screens.levels to javafx.fxml;
+    opens com.example.demo.view.levels to javafx.fxml;
+    opens com.example.demo.view.overlays to javafx.fxml;
+    opens com.example.demo.view.components to javafx.fxml;
+    opens com.example.demo.view.utils to javafx.fxml;
+    opens com.example.demo.view.entities to javafx.fxml;
 }

@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 import com.example.demo.model.base.LevelParent;
-import com.example.demo.view.base.LevelView;
+import com.example.demo.view.levels.LevelView;
 import com.example.demo.view.objects.Boss;
 
 public class LevelFour extends LevelParent {
@@ -25,7 +25,7 @@ public class LevelFour extends LevelParent {
 
     @Override
     protected LevelView instantiateLevelView() {
-        return new com.example.demo.view.screens.levels.LevelFour(getRoot(), PLAYER_INITIAL_HEALTH);
+        return new com.example.demo.view.levels.LevelFour(getRoot(), PLAYER_INITIAL_HEALTH);
     }
 
     @Override

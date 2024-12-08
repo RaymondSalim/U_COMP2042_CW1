@@ -1,9 +1,9 @@
-package com.example.demo.view.screens;
+package com.example.demo.view.overlays;
 
 import com.example.demo.audio.AudioEnum;
 import com.example.demo.audio.AudioManager;
 import com.example.demo.context.AppContext;
-import com.example.demo.view.base.ImageButton;
+import com.example.demo.view.components.ImageButton;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
@@ -19,7 +19,7 @@ import javafx.util.Duration;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class LevelComplete {
+public class LevelCompleteOverlay implements Overlay {
     private static final int TEXT_FONT_SIZE = 24; // Increased font size
     private final String BG_IMAGE = "/com/example/demo/images/levelComplete/levelComplete.png";
     private final String STAR_IMAGE = "/com/example/demo/images/levelComplete/star.png";
@@ -33,7 +33,7 @@ public class LevelComplete {
     private int starCount = 0;
     private int score = 0;
 
-    public LevelComplete(
+    public LevelCompleteOverlay(
             Runnable onLevelSelect,
             Runnable onRestart,
             Runnable onNextLevel
@@ -171,15 +171,18 @@ public class LevelComplete {
         }
     }
 
+    @Override
     public Pane getPane() {
         return menu;
     }
 
+    @Override
     public void show() {
         menu.setVisible(true);
         glowStars();
     }
 
+    @Override
     public void hide() {
         menu.setVisible(false);
         reset();

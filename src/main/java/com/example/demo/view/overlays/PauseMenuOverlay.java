@@ -1,7 +1,7 @@
-package com.example.demo.view.screens;
+package com.example.demo.view.overlays;
 
 import com.example.demo.context.AppContext;
-import com.example.demo.view.base.ImageButton;
+import com.example.demo.view.components.ImageButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
-public class PauseMenu {
+public class PauseMenuOverlay implements Overlay {
     private final String BG_IMAGE = "/com/example/demo/images/pauseMenu/pauseWindow.png";
     private final VBox menu;
 
@@ -18,7 +18,7 @@ public class PauseMenu {
     private final Label scoreLabel;
     private final Slider volumeSlider;
 
-    public PauseMenu(
+    public PauseMenuOverlay(
             Runnable onResume,
             Runnable onRestart,
             Runnable onLevelSelect
@@ -106,14 +106,17 @@ public class PauseMenu {
         scoreLabel.setText("Score: " + score);
     }
 
+    @Override
     public Pane getPane() {
         return menu;
     }
 
+    @Override
     public void show() {
         menu.setVisible(true);
     }
 
+    @Override
     public void hide() {
         menu.setVisible(false);
     }

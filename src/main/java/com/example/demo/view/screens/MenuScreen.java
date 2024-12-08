@@ -1,8 +1,8 @@
 package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
-import com.example.demo.view.base.ImageButton;
-import com.example.demo.view.base.NavigationHandler;
+import com.example.demo.view.components.ImageButton;
+import com.example.demo.view.utils.NavigationHandler;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.RotateTransition;
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class MenuScreen {
+public class MenuScreen implements Screen {
     private final NavigationHandler navigationHandler;
 
     private final int MAX_METEOR = 5;
@@ -31,6 +31,7 @@ public class MenuScreen {
         this.navigationHandler = navigationHandler;
     }
 
+    @Override
     public Scene createScene() {
         AppContext context = AppContext.getInstance();
 

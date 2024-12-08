@@ -1,7 +1,6 @@
-package com.example.demo.view.screens.levels;
+package com.example.demo.view.levels;
 
 import com.example.demo.context.AppContext;
-import com.example.demo.view.base.LevelView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;

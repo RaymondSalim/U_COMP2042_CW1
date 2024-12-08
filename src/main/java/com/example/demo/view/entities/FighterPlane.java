@@ -1,4 +1,4 @@
-package com.example.demo.view.base;
+package com.example.demo.view.entities;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

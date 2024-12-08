@@ -1,6 +1,6 @@
 package com.example.demo.view.objects;
 
-import com.example.demo.view.base.Projectile;
+import com.example.demo.view.entities.Projectile;
 
 public class BossProjectile extends Projectile {
 
