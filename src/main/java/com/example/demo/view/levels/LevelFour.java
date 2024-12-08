@@ -1,14 +1,13 @@
-package com.example.demo.view.screens.levels;
+package com.example.demo.view.levels;
 
-import com.example.demo.view.base.LevelView;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 
-public class LevelTwo extends LevelView {
-    private static final String BACKGROUND_IMAGE_NAME_1 = "/com/example/demo/images/level/bg2.png";
-    private static final String BACKGROUND_IMAGE_NAME_2 = "/com/example/demo/images/level/bg2r.png";
+public class LevelFour extends LevelView {
+    private static final String BACKGROUND_IMAGE_NAME_1 = "/com/example/demo/images/level/bg4.png";
+    private static final String BACKGROUND_IMAGE_NAME_2 = "/com/example/demo/images/level/bg4r.png";
 
-    public LevelTwo(Group root, int heartsToDisplay) {
+    public LevelFour(Group root, int heartsToDisplay) {
         super(root, heartsToDisplay);
 
         Image backgroundImage = new Image(getClass().getResource(BACKGROUND_IMAGE_NAME_1).toExternalForm());

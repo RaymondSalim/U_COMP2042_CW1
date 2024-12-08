@@ -1,7 +1,7 @@
 package com.example.demo.view.objects;
 
-import com.example.demo.view.base.ActiveActorDestructible;
-import com.example.demo.view.base.FighterPlane;
+import com.example.demo.view.entities.ActiveActorDestructible;
+import com.example.demo.view.entities.FighterPlane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 

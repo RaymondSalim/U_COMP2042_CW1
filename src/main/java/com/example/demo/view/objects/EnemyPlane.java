@@ -1,7 +1,7 @@
 package com.example.demo.view.objects;
 
-import com.example.demo.view.base.ActiveActorDestructible;
-import com.example.demo.view.base.FighterPlane;
+import com.example.demo.view.entities.ActiveActorDestructible;
+import com.example.demo.view.entities.FighterPlane;
 
 public class EnemyPlane extends FighterPlane {
     private static final String IMAGE_NAME = "enemyplane.png";

@@ -1,8 +1,9 @@
-package com.example.demo.view.base;
+package com.example.demo.view.levels;
 
 import com.example.demo.context.AppContext;
-import com.example.demo.view.RollingBackground;
-import com.example.demo.view.objects.HeartDisplay;
+import com.example.demo.view.components.HeartDisplay;
+import com.example.demo.view.components.RollingBackground;
+import com.example.demo.view.entities.ActiveActorDestructible;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

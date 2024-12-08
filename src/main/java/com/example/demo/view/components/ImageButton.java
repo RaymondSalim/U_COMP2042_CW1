@@ -1,4 +1,4 @@
-package com.example.demo.view.base;
+package com.example.demo.view.components;
 
 import com.example.demo.audio.AudioEnum;
 import com.example.demo.audio.AudioManager;

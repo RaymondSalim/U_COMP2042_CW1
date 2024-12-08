@@ -3,7 +3,7 @@ package com.example.demo.model;
 import com.example.demo.context.AppContext;
 import com.example.demo.enums.LevelType;
 import com.example.demo.model.base.LevelParent;
-import com.example.demo.view.base.LevelView;
+import com.example.demo.view.levels.LevelView;
 import com.example.demo.view.objects.EnemyPlane;
 
 public class LevelOne extends LevelParent {
@@ -30,12 +30,12 @@ public class LevelOne extends LevelParent {
 
     @Override
     protected LevelView instantiateLevelView() {
-        return new com.example.demo.view.screens.levels.LevelOne(getRoot(), PLAYER_INITIAL_HEALTH);
+        return new com.example.demo.view.levels.LevelOne(getRoot(), PLAYER_INITIAL_HEALTH);
     }
 
     @Override
     public void updateScene(double deltaTime) {
-        com.example.demo.view.screens.levels.LevelOne levelView = (com.example.demo.view.screens.levels.LevelOne) getLevelView();
+        com.example.demo.view.levels.LevelOne levelView = (com.example.demo.view.levels.LevelOne) getLevelView();
 
         // Handle delay between phases
         if (!phaseComplete && stepDelayTimer > 0) {
@@ -106,7 +106,7 @@ public class LevelOne extends LevelParent {
         phaseComplete = false;
         hasSpawned = false;
 
-        com.example.demo.view.screens.levels.LevelOne levelView = (com.example.demo.view.screens.levels.LevelOne) getLevelView();
+        com.example.demo.view.levels.LevelOne levelView = (com.example.demo.view.levels.LevelOne) getLevelView();
         levelView.deleteMessage();
     }
 

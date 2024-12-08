@@ -2,7 +2,7 @@ package com.example.demo.model;
 
 import com.example.demo.enums.LevelType;
 import com.example.demo.model.base.LevelParent;
-import com.example.demo.view.base.LevelView;
+import com.example.demo.view.levels.LevelView;
 
 public class LevelTwo extends LevelParent {
     private static final int PLAYER_INITIAL_HEALTH = 3;
@@ -34,6 +34,6 @@ public class LevelTwo extends LevelParent {
 
     @Override
     protected LevelView instantiateLevelView() {
-        return new com.example.demo.view.screens.levels.LevelTwo(getRoot(), PLAYER_INITIAL_HEALTH);
+        return new com.example.demo.view.levels.LevelTwo(getRoot(), PLAYER_INITIAL_HEALTH);
     }
 }

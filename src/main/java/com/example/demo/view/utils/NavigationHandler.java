@@ -1,4 +1,4 @@
-package com.example.demo.view.base;
+package com.example.demo.view.utils;
 
 import com.example.demo.enums.LevelType;
 

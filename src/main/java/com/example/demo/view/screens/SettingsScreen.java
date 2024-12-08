@@ -1,9 +1,9 @@
 package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
-import com.example.demo.view.base.ImageButton;
-import com.example.demo.view.base.ImageCheckbox;
-import com.example.demo.view.base.NavigationHandler;
+import com.example.demo.view.components.ImageButton;
+import com.example.demo.view.components.ImageCheckbox;
+import com.example.demo.view.utils.NavigationHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,15 +16,16 @@ import javafx.scene.text.Font;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.demo.view.base.Constants.SHARED_RESOURCE_FOLDER;
+import static com.example.demo.view.utils.Constants.SHARED_RESOURCE_FOLDER;
 
-public class Settings {
+public class SettingsScreen implements Screen {
     private final NavigationHandler navigationHandler;
 
-    public Settings(NavigationHandler navigationHandler) {
+    public SettingsScreen(NavigationHandler navigationHandler) {
         this.navigationHandler = navigationHandler;
     }
 
+    @Override
     public Scene createScene() {
         AppContext context = AppContext.getInstance();
 

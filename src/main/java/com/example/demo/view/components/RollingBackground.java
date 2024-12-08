@@ -1,4 +1,4 @@
-package com.example.demo.view;
+package com.example.demo.view.components;
 
 import com.example.demo.context.AppContext;
 import javafx.animation.KeyFrame;

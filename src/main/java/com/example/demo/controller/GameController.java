@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.enums.LevelType;
-import com.example.demo.view.base.NavigationHandler;
+import com.example.demo.view.utils.NavigationHandler;
 import javafx.stage.Stage;
 
 public class GameController implements NavigationHandler {

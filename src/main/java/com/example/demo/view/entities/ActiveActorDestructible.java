@@ -1,4 +1,4 @@
-package com.example.demo.view.base;
+package com.example.demo.view.entities;
 
 public abstract class ActiveActorDestructible extends ActiveActor implements Destructible {
 

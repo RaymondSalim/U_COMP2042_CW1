@@ -2,8 +2,8 @@ package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
 import com.example.demo.enums.LevelType;
-import com.example.demo.view.base.ImageButton;
-import com.example.demo.view.base.NavigationHandler;
+import com.example.demo.view.components.ImageButton;
+import com.example.demo.view.utils.NavigationHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,18 +15,18 @@ import javafx.scene.layout.StackPane;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.demo.view.base.Constants.SHARED_RESOURCE_FOLDER;
+import static com.example.demo.view.utils.Constants.SHARED_RESOURCE_FOLDER;
 
-// TODO! Level Unlock Feature
-public class LevelSelect {
+public class LevelSelectScreen implements Screen {
     private final String LEVEL_MENU_ASSETS_FOLDER = "/com/example/demo/images/levelSelectMenu";
 
     private final NavigationHandler navigationHandler;
 
-    public LevelSelect(NavigationHandler navigationHandler) {
+    public LevelSelectScreen(NavigationHandler navigationHandler) {
         this.navigationHandler = navigationHandler;
     }
 
+    @Override
     public Scene createScene() {
         AppContext context = AppContext.getInstance();
         StackPane root = new StackPane();

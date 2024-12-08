@@ -5,8 +5,8 @@ import com.example.demo.audio.AudioManager;
 import com.example.demo.context.AppContext;
 import com.example.demo.model.Player;
 import com.example.demo.observer.ScreenSizeObserver;
-import com.example.demo.view.base.ActiveActorDestructible;
-import com.example.demo.view.base.FighterPlane;
+import com.example.demo.view.entities.ActiveActorDestructible;
+import com.example.demo.view.entities.FighterPlane;
 import javafx.beans.property.SimpleDoubleProperty;
 
 public class UserPlane extends FighterPlane implements ScreenSizeObserver {
