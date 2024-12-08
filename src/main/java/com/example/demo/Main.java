@@ -7,6 +7,13 @@ import com.example.demo.controller.GameController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * The main entry point of the application.
+ * <p>
+ * Initializes the application context, sets up the game stage,
+ * and starts the main menu.
+ * </p>
+ */
 public class Main extends Application {
     private static final int SCREEN_WIDTH = 1300;
     private static final int SCREEN_HEIGHT = 750;
@@ -18,10 +25,22 @@ public class Main extends Application {
 
     private Stage stage;
 
+    /**
+     * The main method, serving as the entry point of the application.
+     *
+     * @param args command-line arguments.
+     */
     public static void main(String[] args) {
         launch();
     }
 
+    /**
+     * The JavaFX start method, which initializes the game window and sets up the application context.
+     *
+     * @param stage the primary stage for this application.
+     * @throws SecurityException        if a security manager exists and denies certain operations.
+     * @throws IllegalArgumentException if an illegal argument is passed to the setup.
+     */
     @Override
     public void start(Stage stage) throws SecurityException, IllegalArgumentException {
         this.stage = stage;
@@ -41,14 +60,6 @@ public class Main extends Application {
         audioManager.preloadSounds();
         audioManager.setBackgroundMusic(AudioEnum.BG_MUSIC);
         audioManager.playBackgroundMusic();
-
-//        stage.widthProperty().addListener((observable, oldValue, newValue) -> {
-//            context.setScreenSize(context.getScreenHeight(), newValue.intValue());
-//        });
-//
-//        stage.heightProperty().addListener((observable, oldValue, newValue) -> {
-//            context.setScreenSize(newValue.intValue(), context.getScreenWidth());
-//        });
 
         GameController gameController = new GameController(stage);
         gameController.showMenuScreen();

@@ -18,6 +18,13 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Manages level-specific logic, including level transitions, game updates, and overlays.
+ * <p>
+ * Implements the {@link GameStateObserver} interface to handle game state events such as
+ * pausing, restarting, or completing a level.
+ * </p>
+ */
 public class LevelController implements GameStateObserver {
     private final Stage stage;
     private final UIController uiController;
@@ -32,6 +39,12 @@ public class LevelController implements GameStateObserver {
 
     private long lastUpdateTime = 0;
 
+    /**
+     * Creates a new {@code LevelController}.
+     *
+     * @param stage        the primary {@link Stage} for displaying levels.
+     * @param uiController the {@link UIController} managing UI overlays.
+     */
     public LevelController(Stage stage, UIController uiController) {
         this.stage = stage;
         this.uiController = uiController;
@@ -83,6 +96,9 @@ public class LevelController implements GameStateObserver {
         uiController.showCreditsScreen();
     }
 
+    /**
+     * Initializes overlays for pause, game over, and level complete states.
+     */
     private void initializeOverlays() {
         Runnable showLevelSelect = () -> {
             gameTimeline.stop();
@@ -113,6 +129,11 @@ public class LevelController implements GameStateObserver {
         uiController.setLevelCompleteOverlay(levelCompleteOverlay);
     }
 
+    /**
+     * Transitions to the specified level and sets up its scene.
+     *
+     * @param levelType the {@link LevelType} to load.
+     */
     public void goToLevel(LevelType levelType) {
         currentLevel = LevelFactory.createLevel(levelType);
         currentLevel.addGameStateObserver(this);
@@ -151,23 +172,25 @@ public class LevelController implements GameStateObserver {
         currentLevel.updateScene(deltaTime);
         currentLevel.updateView(currentLevelView, deltaTime);
 
-        // Calculate FPS and update it in LevelView
         if (deltaTime > 0) {
             double fps = 1.0 / deltaTime;
             currentLevelView.updateFPS(fps);
         }
     }
 
+    /**
+     * Starts the game loop and hides overlays.
+     */
     public void startGame() {
         AppContext context = AppContext.getInstance();
-//        context.getTargetFPS().addListener((obs, oldVal, newVal) -> {
-//            initializeGameTimeline(newVal.doubleValue());
-//        }); TODO! Check if listener is necessary
         initializeGameTimeline(context.getTargetFPS().doubleValue());
         pauseMenuOverlay.hide();
         uiController.hideOverlays();
     }
 
+    /**
+     * Pauses the game and displays the pause menu overlay.
+     */
     public void pauseGame() {
         if (gameTimeline != null) {
             gameTimeline.pause();
@@ -179,6 +202,9 @@ public class LevelController implements GameStateObserver {
         }
     }
 
+    /**
+     * Resumes the game from a paused state.
+     */
     public void resumeGame() {
         if (gameTimeline != null) {
             gameTimeline.play();
@@ -188,20 +214,21 @@ public class LevelController implements GameStateObserver {
         }
     }
 
-    // Toggle pause/resume based on current game state
-    private void togglePause() {
-        if (gameTimeline != null && gameTimeline.getStatus() == Timeline.Status.RUNNING) {
-            pauseGame();
-        } else {
-            resumeGame();
-        }
-    }
-
+    /**
+     * Sets key handlers for the current level's scene.
+     *
+     * @param scene the {@link Scene} to attach key handlers to.
+     */
     private void setKeyHandlers(Scene scene) {
         scene.setOnKeyPressed(event -> handleKeyPress(event.getCode()));
         scene.setOnKeyReleased(event -> handleKeyRelease(event.getCode()));
     }
 
+    /**
+     * Handles key press events for level interaction.
+     *
+     * @param keyCode the pressed {@link KeyCode}.
+     */
     private void handleKeyPress(KeyCode keyCode) {
         switch (keyCode) {
             case UP -> currentLevel.moveUserPlane(Direction.UP);
@@ -211,9 +238,25 @@ public class LevelController implements GameStateObserver {
         }
     }
 
+    /**
+     * Handles key release events for level interaction.
+     *
+     * @param keyCode the released {@link KeyCode}.
+     */
     private void handleKeyRelease(KeyCode keyCode) {
         if (keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) {
             currentLevel.stopUserPlane();
+        }
+    }
+
+    /**
+     * Toggles the game state between paused and resumed.
+     */
+    private void togglePause() {
+        if (gameTimeline != null && gameTimeline.getStatus() == Timeline.Status.RUNNING) {
+            pauseGame();
+        } else {
+            resumeGame();
         }
     }
 }

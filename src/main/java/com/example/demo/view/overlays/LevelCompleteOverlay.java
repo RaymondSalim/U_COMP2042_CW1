@@ -19,6 +19,9 @@ import javafx.util.Duration;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Represents the overlay displayed when a level is completed.
+ */
 public class LevelCompleteOverlay implements Overlay {
     private static final int TEXT_FONT_SIZE = 24; // Increased font size
     private final String BG_IMAGE = "/com/example/demo/images/levelComplete/levelComplete.png";
@@ -33,6 +36,13 @@ public class LevelCompleteOverlay implements Overlay {
     private int starCount = 0;
     private int score = 0;
 
+    /**
+     * Constructs a {@code LevelCompleteOverlay}.
+     *
+     * @param onLevelSelect the action to perform when the "Level Select" button is clicked.
+     * @param onRestart     the action to perform when the "Restart" button is clicked.
+     * @param onNextLevel   the action to perform when the "Next Level" button is clicked.
+     */
     public LevelCompleteOverlay(
             Runnable onLevelSelect,
             Runnable onRestart,
@@ -116,15 +126,28 @@ public class LevelCompleteOverlay implements Overlay {
         menu.setVisible(false);
     }
 
+    /**
+     * Sets the number of stars to display.
+     *
+     * @param starCount the number of stars (0 to 3).
+     */
     public void setStarCount(int starCount) {
         this.starCount = Math.max(0, Math.min(3, starCount));
     }
 
+    /**
+     * Updates the displayed score with an animation.
+     *
+     * @param score the score to update.
+     */
     public void setScore(int score) {
         this.score = score;
         animateScore();
     }
 
+    /**
+     * Animates the score display to increment up to the final score.
+     */
     private void animateScore() {
         Timeline timeline = new Timeline();
         timeline.setCycleCount(score);
@@ -135,6 +158,9 @@ public class LevelCompleteOverlay implements Overlay {
         timeline.play();
     }
 
+    /**
+     * Animates the stars to glow one by one, synchronized with sound effects.
+     */
     private void glowStars() {
         AudioManager manager = AudioManager.getInstance();
         AudioEnum[] audios = new AudioEnum[]{AudioEnum.STAR_1, AudioEnum.STAR_2, AudioEnum.STAR_3};
@@ -163,6 +189,9 @@ public class LevelCompleteOverlay implements Overlay {
         }
     }
 
+    /**
+     * Resets the overlay to its initial state, including stars and score.
+     */
     private void reset() {
         setScore(0);
         for (int i = 0; i < starCount; i++) {

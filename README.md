@@ -27,6 +27,14 @@ Run the following command to run the app
 mvn clean javafx:run
 ```
 
+## Javadoc
+
+Run the following command to generate the Javadoc
+
+```shell
+mvn javadoc:javadoc
+```
+
 # Game Assets
 
 Most of the game assets are initially provided in the repository.

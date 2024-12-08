@@ -1,8 +1,8 @@
 package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
+import com.example.demo.utils.NavigationHandler;
 import com.example.demo.view.components.ImageButton;
-import com.example.demo.view.utils.NavigationHandler;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.RotateTransition;
@@ -21,12 +21,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Represents the main menu screen of the game.
+ */
 public class MenuScreen implements Screen {
     private final NavigationHandler navigationHandler;
 
     private final int MAX_METEOR = 5;
     private final String MENU_ASSETS_FOLDER = "/com/example/demo/images/menu";
 
+    /**
+     * Constructs a {@code MenuScreen}.
+     *
+     * @param navigationHandler the handler to navigate between screens.
+     */
     public MenuScreen(NavigationHandler navigationHandler) {
         this.navigationHandler = navigationHandler;
     }
@@ -69,7 +77,7 @@ public class MenuScreen implements Screen {
         // Credits Button
         ImageButton creditsButton = new ImageButton(MENU_ASSETS_FOLDER + "/creditsBtn.png");
         creditsButton.setPreserveRatio(true);
-        creditsButton.setFitWidth(50); // Set a fixed width for the back button
+        creditsButton.setFitWidth(50);
         creditsButton.setOnMouseClicked(e -> navigationHandler.showCreditsScreen());
         StackPane.setMargin(creditsButton, new Insets(20));
         StackPane.setAlignment(creditsButton, Pos.BOTTOM_RIGHT);
@@ -94,6 +102,13 @@ public class MenuScreen implements Screen {
         return new Scene(root, context.getScreenWidthPropertyProperty().get(), context.getScreenHeightPropertyProperty().get());
     }
 
+    /**
+     * Spawns a random meteor animation.
+     *
+     * @param random  the random object for meteor properties.
+     * @param root    the root container for meteors.
+     * @param context the application context for screen properties.
+     */
     private void spawnMeteor(Random random, Pane root, AppContext context) {
         long existingMeteors = root.getChildren().stream().filter(child -> {
             if (child.getUserData() instanceof String) {

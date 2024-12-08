@@ -18,14 +18,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Abstract base class for all levels in the game.
+ * <p>
+ * Handles core level functionality, such as player movement, enemy spawning, collision detection,
+ * scoring, and managing game state transitions.
+ * </p>
+ */
 public abstract class LevelParent extends GameStateObservable {
-    protected int MAX_ENEMIES_AT_A_TIME = 5;
-    protected int MAX_ENEMY_SPAWN;
-    protected double ENEMY_SPAWN_PROBABILITY = .20;
+    /**
+     * The margin at the bottom of the screen where enemies should not spawn or move beyond.
+     */
+    private static final double BOTTOM_MARGIN = 150;
+    /**
+     * The initial delay (in seconds) before enemies can start spawning in the level.
+     */
     private final double ENEMY_SPAWN_DELAY = 3.0;
+    /**
+     * The maximum number of enemies that can be active at the same time during the level.
+     */
+    protected int MAX_ENEMIES_AT_A_TIME = 5;
+    /**
+     * The total number of enemies to spawn in the level.
+     */
+    protected int MAX_ENEMY_SPAWN;
+    /**
+     * The probability of spawning an enemy during each update cycle.
+     */
+    protected double ENEMY_SPAWN_PROBABILITY = .20;
+    /**
+     * The {@link LevelType} of the next level. If null, this is the final level.
+     */
     protected LevelType NEXT_LEVEL;
 
-    private static final double BOTTOM_MARGIN = 150;
     private final SimpleDoubleProperty screenHeight;
     private final SimpleDoubleProperty screenWidth;
     private final SimpleDoubleProperty enemyMaximumYPosition;
@@ -46,6 +71,11 @@ public abstract class LevelParent extends GameStateObservable {
     private int spawnedEnemies = 0;
     private double enemySpawnDelay = ENEMY_SPAWN_DELAY;
 
+    /**
+     * Constructs a new {@code LevelParent}.
+     *
+     * @param playerInitialHealth the initial health of the player.
+     */
     public LevelParent(int playerInitialHealth) {
         this.root = new Group();
         root.layoutXProperty().addListener((obs, oldVal, newVal) -> root.setLayoutX(0));
@@ -76,35 +106,77 @@ public abstract class LevelParent extends GameStateObservable {
         initializeFriendlyUnits();
     }
 
+    /**
+     * Gets the {@link LevelView} associated with the level.
+     *
+     * @return the {@link LevelView}.
+     */
     public LevelView getLevelView() {
         return levelView;
     }
 
+    /**
+     * Gets the number of stars earned based on the score.
+     *
+     * @return the number of stars.
+     */
     public int getStarCount() {
         return this.calculateStars(score);
     }
 
+    /**
+     * Gets the player's current score.
+     *
+     * @return the player's score.
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Gets the list of user projectiles.
+     *
+     * @return a list of {@link ActiveActorDestructible} representing the user's projectiles.
+     */
     public List<ActiveActorDestructible> getUserProjectiles() {
         return userProjectiles;
     }
 
+    /**
+     * Gets the user's plane.
+     *
+     * @return the {@link UserPlane}.
+     */
     public UserPlane getUser() {
         return user;
     }
 
+    /**
+     * Abstract method to calculate the number of stars based on the score.
+     *
+     * @param score the score achieved by the player.
+     * @return the number of stars earned.
+     */
     protected abstract int calculateStars(int score);
 
+    /**
+     * Abstract method to instantiate the {@link LevelView} for the level.
+     *
+     * @return the instantiated {@link LevelView}.
+     */
+    protected abstract LevelView instantiateLevelView();
+
+    /**
+     * Ensures that all actors (enemies and projectiles) remain within screen bounds,
+     * and destroys any projectiles that move out of bounds.
+     */
     private void repositionOutOfBoundsActors() {
         for (ActiveActorDestructible enemy : enemyUnits) {
             double enemyYPosition = enemy.getLayoutY() + enemy.getTranslateY();
             if (enemyYPosition > enemyMaximumYPosition.get()) {
-                enemy.setTranslateY(enemyMaximumYPosition.subtract(enemy.getLayoutY()).get()); // Move back within bounds
+                enemy.setTranslateY(enemyMaximumYPosition.subtract(enemy.getLayoutY()).get());
             } else if (enemyYPosition < 0) {
-                enemy.setTranslateY(-enemy.getLayoutY()); // Move to the top bound
+                enemy.setTranslateY(-enemy.getLayoutY());
             }
         }
 
@@ -120,6 +192,9 @@ public abstract class LevelParent extends GameStateObservable {
         }
     }
 
+    /**
+     * Resets the level to its initial state, clearing all actors and resetting the player's state.
+     */
     public void resetLevel() {
         removeAllActors();
 
@@ -140,6 +215,9 @@ public abstract class LevelParent extends GameStateObservable {
         initializeFriendlyUnits();
     }
 
+    /**
+     * Removes all actors from the level's root node.
+     */
     private void removeAllActors() {
         root.getChildren().removeAll(this.friendlyUnits);
         root.getChildren().removeAll(this.enemyUnits);
@@ -147,42 +225,65 @@ public abstract class LevelParent extends GameStateObservable {
         root.getChildren().removeAll(this.enemyProjectiles);
     }
 
-    protected abstract LevelView instantiateLevelView();
-
+    /**
+     * Gets the list of all enemy units currently active in the level.
+     *
+     * @return a list of {@link ActiveActorDestructible} representing enemy units.
+     */
     protected List<ActiveActorDestructible> getEnemyUnits() {
         return enemyUnits;
     }
 
+    /**
+     * Gets the root {@link Group} containing all actors in the level.
+     *
+     * @return the root node of the level.
+     */
     public Group getRoot() {
         return root;
     }
 
+    /**
+     * Gets the {@link LevelType} of the next level, or {@code null} if this is the final level.
+     *
+     * @return the next level's {@link LevelType}.
+     */
     public LevelType getNextLevel() {
         return NEXT_LEVEL;
     }
 
+    /**
+     * Updates the level's game state, including actors and UI components.
+     *
+     * @param deltaTime the time elapsed since the last update, in seconds.
+     */
     public void updateScene(double deltaTime) {
         updateActors(deltaTime);
 
         if (enemySpawnDelay > 0) {
-            enemySpawnDelay -= deltaTime; // Decrement the delay timer
-            return; // Skip enemy spawning and other updates during delay
-        } else {
-            spawnEnemyUnits();
-            generateEnemyFire();
-            handleEnemyPenetration();
-            handleUserProjectileCollisions();
-            handleEnemyProjectileCollisions();
-            handleCollisions(userProjectiles, enemyProjectiles);
-            handlePlaneCollisions();
-            removeAllDestroyedActors();
+            enemySpawnDelay -= deltaTime;
+            return;
         }
 
+        spawnEnemyUnits();
+        generateEnemyFire();
+        handleEnemyPenetration();
+        handleUserProjectileCollisions();
+        handleEnemyProjectileCollisions();
+        handleCollisions(userProjectiles, enemyProjectiles);
+        handlePlaneCollisions();
+        removeAllDestroyedActors();
         updateLevelView();
+
         boolean playerDestroyed = checkPlayerHealth();
         if (!playerDestroyed) checkLevelCompleted();
     }
 
+    /**
+     * Checks the player's health and triggers a game-over event if health is depleted.
+     *
+     * @return {@code true} if the player is destroyed, otherwise {@code false}.
+     */
     private boolean checkPlayerHealth() {
         if (player.isDestroyed()) {
             notifyEvent(GameState.GAME_OVER);
@@ -191,12 +292,18 @@ public abstract class LevelParent extends GameStateObservable {
         return false;
     }
 
+    /**
+     * Checks if the level is completed and triggers a transition if so.
+     */
     protected void checkLevelCompleted() {
         if (MAX_ENEMY_SPAWN == spawnedEnemies && enemyUnits.isEmpty()) {
             levelComplete();
         }
     }
 
+    /**
+     * Marks the level as complete and notifies the appropriate game state.
+     */
     protected void levelComplete() {
         if (this.NEXT_LEVEL != null) {
             notifyEvent(GameState.LEVEL_COMPLETED);
@@ -205,20 +312,34 @@ public abstract class LevelParent extends GameStateObservable {
         }
     }
 
+    /**
+     * Initializes the friendly units, including adding the player's plane to the root group.
+     */
     private void initializeFriendlyUnits() {
         this.root.getChildren().addAll(this.user);
     }
 
+    /**
+     * Fires a projectile from the user's plane.
+     */
     private void fireProjectile() {
         ActiveActorDestructible projectile = user.fireProjectile();
         root.getChildren().add(projectile);
         userProjectiles.add(projectile);
     }
 
+    /**
+     * Fires projectiles from each enemy unit, if applicable.
+     */
     private void generateEnemyFire() {
         enemyUnits.forEach(enemy -> spawnEnemyProjectile(((FighterPlane) enemy).fireProjectile()));
     }
 
+    /**
+     * Adds a newly spawned enemy projectile to the root group and tracks it.
+     *
+     * @param projectile the enemy projectile to spawn.
+     */
     private void spawnEnemyProjectile(ActiveActorDestructible projectile) {
         if (projectile != null) {
             root.getChildren().add(projectile);
@@ -226,6 +347,9 @@ public abstract class LevelParent extends GameStateObservable {
         }
     }
 
+    /**
+     * Spawns enemy units according to the level's spawning rules.
+     */
     protected void spawnEnemyUnits() {
         int enemiesToSpawn = Math.min(MAX_ENEMIES_AT_A_TIME - enemyUnits.size(), MAX_ENEMY_SPAWN - spawnedEnemies);
 
@@ -239,6 +363,11 @@ public abstract class LevelParent extends GameStateObservable {
         }
     }
 
+    /**
+     * Updates all actors in the level.
+     *
+     * @param deltaTime the time elapsed since the last update, in seconds.
+     */
     private void updateActors(double deltaTime) {
         friendlyUnits.forEach(actor -> actor.updateActor(deltaTime));
         enemyUnits.forEach(actor -> actor.updateActor(deltaTime));
@@ -246,6 +375,9 @@ public abstract class LevelParent extends GameStateObservable {
         enemyProjectiles.forEach(actor -> actor.updateActor(deltaTime));
     }
 
+    /**
+     * Removes all destroyed actors from the level.
+     */
     private void removeAllDestroyedActors() {
         removeDestroyedActors(friendlyUnits);
         removeDestroyedActors(enemyUnits);
@@ -253,13 +385,22 @@ public abstract class LevelParent extends GameStateObservable {
         removeDestroyedActors(enemyProjectiles);
     }
 
+    /**
+     * Removes destroyed actors from a given list.
+     *
+     * @param actors the list of actors to process.
+     */
     private void removeDestroyedActors(List<ActiveActorDestructible> actors) {
-        List<ActiveActorDestructible> destroyedActors = actors.stream().filter(ActiveActorDestructible::isDestroyed)
+        List<ActiveActorDestructible> destroyedActors = actors.stream()
+                .filter(ActiveActorDestructible::isDestroyed)
                 .collect(Collectors.toList());
         root.getChildren().removeAll(destroyedActors);
         actors.removeAll(destroyedActors);
     }
 
+    /**
+     * Handles plane-to-plane collisions, damaging both planes upon contact.
+     */
     private void handlePlaneCollisions() {
         for (ActiveActorDestructible friendly : friendlyUnits) {
             for (ActiveActorDestructible enemy : enemyUnits) {
@@ -268,7 +409,6 @@ public abstract class LevelParent extends GameStateObservable {
                         friendly.takeDamage();
                         enemy.takeDamage();
 
-                        // Check if enemy is destroyed
                         if (enemy.isDestroyed()) {
                             user.incrementKillCount();
                             score += 100;
@@ -279,15 +419,17 @@ public abstract class LevelParent extends GameStateObservable {
         }
     }
 
+    /**
+     * Handles collisions between user projectiles and enemies.
+     */
     private void handleUserProjectileCollisions() {
         List<ActiveActorDestructible> projectilesToRemove = new ArrayList<>();
         for (ActiveActorDestructible projectile : userProjectiles) {
             for (ActiveActorDestructible enemy : enemyUnits) {
-                // Check if the projectile is out of bounds along the X-axis
                 double projectileX = projectile.getLayoutX() + projectile.getTranslateX();
                 if (projectileX < 0 || projectileX > screenWidth.get()) {
                     projectilesToRemove.add(projectile);
-                    continue; // Skip collision checks for out-of-bounds projectiles
+                    continue;
                 }
 
                 if (!projectile.isDestroyed() && !enemy.isDestroyed()) {
@@ -295,7 +437,6 @@ public abstract class LevelParent extends GameStateObservable {
                         projectile.takeDamage();
                         enemy.takeDamage();
 
-                        // Check if enemy is destroyed
                         if (enemy.isDestroyed()) {
                             user.incrementKillCount();
                             score += 100;
@@ -307,10 +448,19 @@ public abstract class LevelParent extends GameStateObservable {
         userProjectiles.removeAll(projectilesToRemove);
     }
 
+    /**
+     * Handles collisions between enemy projectiles and friendly units.
+     */
     private void handleEnemyProjectileCollisions() {
         handleCollisions(enemyProjectiles, friendlyUnits);
     }
 
+    /**
+     * Handles collisions between two lists of actors.
+     *
+     * @param actors1 the first list of actors.
+     * @param actors2 the second list of actors.
+     */
     private void handleCollisions(List<ActiveActorDestructible> actors1,
                                   List<ActiveActorDestructible> actors2) {
         for (ActiveActorDestructible actor : actors2) {
@@ -325,10 +475,9 @@ public abstract class LevelParent extends GameStateObservable {
         }
     }
 
-    private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {
-        return Math.abs(enemy.getTranslateX()) > screenWidth.get();
-    }
-
+    /**
+     * Handles enemies penetrating the player's defenses, reducing health if they escape.
+     */
     private void handleEnemyPenetration() {
         for (ActiveActorDestructible enemy : enemyUnits) {
             if (enemyHasPenetratedDefenses(enemy)) {
@@ -338,23 +487,52 @@ public abstract class LevelParent extends GameStateObservable {
         }
     }
 
+    /**
+     * Checks if an enemy has penetrated the player's defenses.
+     *
+     * @param enemy the enemy to check.
+     * @return {@code true} if the enemy has penetrated, {@code false} otherwise.
+     */
+    private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {
+        return Math.abs(enemy.getTranslateX()) > screenWidth.get();
+    }
+
+    /**
+     * Updates the level view with the player's current health.
+     */
     private void updateLevelView() {
         levelView.updateHealth(player.getHealth());
     }
 
+    /**
+     * Adds an enemy unit to the level, including adding it to the root group for rendering.
+     *
+     * @param enemy the {@link ActiveActorDestructible} representing the enemy unit.
+     */
     protected void addEnemyUnit(ActiveActorDestructible enemy) {
         enemyUnits.add(enemy);
         root.getChildren().add(enemy);
     }
 
+    /**
+     * Pauses the level.
+     */
     public void pause() {
         this.levelView.pause();
     }
 
+    /**
+     * Resumes the level.
+     */
     public void resume() {
         this.levelView.resume();
     }
 
+    /**
+     * Moves the user's plane in the specified direction.
+     *
+     * @param direction the {@link Direction} to move the user's plane.
+     */
     public void moveUserPlane(Direction direction) {
         switch (direction) {
             case UP -> user.moveUp();
@@ -362,14 +540,23 @@ public abstract class LevelParent extends GameStateObservable {
         }
     }
 
+    /**
+     * Fires a projectile from the user's plane.
+     */
     public void userFireProjectile() {
         fireProjectile();
     }
 
+    /**
+     * Stops the user's plane from moving.
+     */
     public void stopUserPlane() {
         user.stop();
     }
 
+    /**
+     * Updates the progress bar for the level view.
+     */
     protected void updateProgressBar() {
         levelView.updateProgress(
                 (double) spawnedEnemies / MAX_ENEMY_SPAWN,
@@ -377,6 +564,12 @@ public abstract class LevelParent extends GameStateObservable {
         );
     }
 
+    /**
+     * Updates the visual representation of all actors in the level view.
+     *
+     * @param levelView the {@link LevelView} to update.
+     * @param deltaTime the time elapsed since the last update, in seconds.
+     */
     public void updateView(LevelView levelView, double deltaTime) {
         friendlyUnits.forEach(u -> levelView.updateActor(u, deltaTime));
         enemyUnits.forEach(u -> levelView.updateActor(u, deltaTime));

@@ -3,7 +3,13 @@ package com.example.demo.audio;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class that maps {@link AudioEnum} keys to their corresponding audio file paths.
+ */
 public class AudioFiles {
+    /**
+     * Mapping of {@link AudioEnum} keys to file paths.
+     */
     private static final Map<AudioEnum, String> audioFilePaths = new HashMap<>();
 
     static {
@@ -18,10 +24,21 @@ public class AudioFiles {
         audioFilePaths.put(AudioEnum.STAR_3, "/com/example/demo/audio/star3.wav");
     }
 
+    /**
+     * Retrieves the file path for a given {@link AudioEnum} key.
+     *
+     * @param key the {@link AudioEnum} key representing the audio.
+     * @return the file path as a {@link String}, or {@code null} if the key is not mapped.
+     */
     public static String getAudioFilePath(AudioEnum key) {
         return audioFilePaths.get(key);
     }
 
+    /**
+     * Returns the complete map of audio file paths.
+     *
+     * @return a {@link Map} of {@link AudioEnum} to file paths.
+     */
     public static Map<AudioEnum, String> getAudioFilePaths() {
         return audioFilePaths;
     }
