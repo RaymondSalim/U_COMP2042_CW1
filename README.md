@@ -31,8 +31,8 @@ Run the following command to generate the Javadoc
 mvn javadoc:javadoc
 ```
 
-For convenience, Javadoc has been generated and is accessible from the `apidocs` folder, or by visiting
-this [link](raymondsalim.github.io/U_COMP2042_CW1/apidocs)
+For convenience, Javadoc has been generated and is accessible by visiting
+this [link](https://raymondsalim.github.io/U_COMP2042_CW1/)
 
 # Game Assets
 
