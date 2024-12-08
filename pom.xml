@@ -95,7 +95,6 @@
                     <source>19</source>
                     <subpackages>com.example.demo</subpackages>
                     <sourcepath>src/main/java</sourcepath>
-                    <reportOutputDirectory>${project.basedir}</reportOutputDirectory>
                     <doclint>none</doclint>
                 </configuration>
             </plugin>
