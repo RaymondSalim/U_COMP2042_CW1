@@ -20,12 +20,19 @@ java --version
 ```
 
 ## Running
-
 Run the following command to run the app
-
 ```shell
 mvn clean javafx:run
 ```
+
+## Javadoc
+Run the following command to generate the Javadoc
+```shell
+mvn javadoc:javadoc
+```
+
+For convenience, Javadoc has been generated and is accessible from the `apidocs` folder, or by visiting
+this [link](raymondsalim.github.io/U_COMP2042_CW1/apidocs)
 
 # Game Assets
 

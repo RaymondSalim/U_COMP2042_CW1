@@ -10,6 +10,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
+/**
+ * Represents the pause menu overlay displayed when the game is paused.
+ * <p>
+ * This overlay provides options to resume the game, restart the level, or return to the level select screen.
+ */
 public class PauseMenuOverlay implements Overlay {
     private final String BG_IMAGE = "/com/example/demo/images/pauseMenu/pauseWindow.png";
     private final VBox menu;
@@ -18,6 +23,13 @@ public class PauseMenuOverlay implements Overlay {
     private final Label scoreLabel;
     private final Slider volumeSlider;
 
+    /**
+     * Constructs a {@code PauseMenuOverlay}.
+     *
+     * @param onResume      the action to perform when the "Resume" button is clicked.
+     * @param onRestart     the action to perform when the "Restart" button is clicked.
+     * @param onLevelSelect the action to perform when the "Level Select" button is clicked.
+     */
     public PauseMenuOverlay(
             Runnable onResume,
             Runnable onRestart,
@@ -80,7 +92,6 @@ public class PauseMenuOverlay implements Overlay {
 
         buttonsPane.getChildren().addAll(levelSelectButton, restartButton, resumeButton);
 
-        // Bind button widths to fit evenly within buttonsPane
         double buttonSpacingFactor = 1.0 / buttonsPane.getChildren().size();
         buttonsPane.getChildren().forEach(button -> {
             ImageButton imageButton = (ImageButton) button;
@@ -102,6 +113,11 @@ public class PauseMenuOverlay implements Overlay {
         menu.setVisible(false);
     }
 
+    /**
+     * Updates the score displayed on the overlay.
+     *
+     * @param score the current score to display.
+     */
     public void updateScore(int score) {
         scoreLabel.setText("Score: " + score);
     }

@@ -2,8 +2,8 @@ package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
 import com.example.demo.enums.LevelType;
+import com.example.demo.utils.NavigationHandler;
 import com.example.demo.view.components.ImageButton;
-import com.example.demo.view.utils.NavigationHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,13 +15,21 @@ import javafx.scene.layout.StackPane;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.demo.view.utils.Constants.SHARED_RESOURCE_FOLDER;
+import static com.example.demo.utils.Constants.SHARED_RESOURCE_FOLDER;
 
+/**
+ * Represents the level selection screen where the player can choose a level to start.
+ */
 public class LevelSelectScreen implements Screen {
     private final String LEVEL_MENU_ASSETS_FOLDER = "/com/example/demo/images/levelSelectMenu";
 
     private final NavigationHandler navigationHandler;
 
+    /**
+     * Constructs a {@code LevelSelectScreen}.
+     *
+     * @param navigationHandler the handler to navigate between screens.
+     */
     public LevelSelectScreen(NavigationHandler navigationHandler) {
         this.navigationHandler = navigationHandler;
     }
@@ -52,9 +60,7 @@ public class LevelSelectScreen implements Screen {
         ImageButton level4Button = new ImageButton(LEVEL_MENU_ASSETS_FOLDER + "/level4.png");
 
         List<ImageButton> levelButtons = Arrays.asList(level1Button, level2Button, level3Button, level4Button);
-        levelButtons.forEach(b -> {
-            b.setPreserveRatio(true);
-        });
+        levelButtons.forEach(b -> b.setPreserveRatio(true));
 
         level1Button.setOnMouseClicked(e -> navigationHandler.startLevel(LevelType.LEVEL_ONE));
         level2Button.setOnMouseClicked(e -> navigationHandler.startLevel(LevelType.LEVEL_TWO));
@@ -79,7 +85,7 @@ public class LevelSelectScreen implements Screen {
         // Back Button
         ImageButton backButton = new ImageButton(SHARED_RESOURCE_FOLDER + "/backButton.png");
         backButton.setPreserveRatio(true);
-        backButton.setFitWidth(50); // Set a fixed width for the back button
+        backButton.setFitWidth(50);
         backButton.setOnMouseClicked(e -> navigationHandler.showMenuScreen());
         StackPane.setMargin(backButton, new Insets(20, 0, 0, 20));
         StackPane.setAlignment(backButton, Pos.TOP_LEFT);

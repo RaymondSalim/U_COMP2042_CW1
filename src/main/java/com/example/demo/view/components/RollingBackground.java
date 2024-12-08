@@ -12,23 +12,31 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Creates a continuously scrolling background effect.
+ * <p>
+ * The {@code RollingBackground} uses multiple background images to create a seamless
+ * scrolling effect that adapts to screen resizing.
+ * </p>
+ */
 public class RollingBackground extends Group {
     private final List<ImageView> backgrounds;
     private final Timeline timeline;
 
+    /**
+     * Constructs a new {@code RollingBackground} with the specified images.
+     *
+     * @param images the images to use as the background.
+     */
     public RollingBackground(Image... images) {
         this.backgrounds = new ArrayList<>();
         AppContext context = AppContext.getInstance();
 
-        // Initialize backgrounds
         for (Image image : images) {
             ImageView background = new ImageView(image);
             background.setPreserveRatio(true);
 
-            // Bind the height to the screen height property
             background.fitHeightProperty().bind(context.getScreenHeightPropertyProperty().asObject());
-
-            // Calculate width based on aspect ratio and bind it
             background.fitWidthProperty().bind(
                     Bindings.createDoubleBinding(
                             () -> image.getWidth() * (context.getScreenHeightPropertyProperty().get() / image.getHeight()),
@@ -41,26 +49,24 @@ public class RollingBackground extends Group {
 
         this.getChildren().addAll(backgrounds);
 
-        // Listen for resizing and adjust positions dynamically
         context.getScreenWidthPropertyProperty().addListener((obs, oldVal, newVal) -> repositionBackgrounds());
         context.getScreenHeightPropertyProperty().addListener((obs, oldVal, newVal) -> repositionBackgrounds());
 
-        // Initialize positions
         repositionBackgrounds();
 
-        // Setup timeline for scrolling effect
         timeline = new Timeline(new KeyFrame(Duration.millis(20), e -> updateBackground()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
 
+    /**
+     * Updates the positions of the backgrounds for the scrolling effect.
+     */
     private void updateBackground() {
-        // Move each background to the left
         for (ImageView background : backgrounds) {
             background.setLayoutX(background.getLayoutX() - 2);
         }
 
-        // Wrap backgrounds when they scroll out of view
         for (int i = 0; i < backgrounds.size(); i++) {
             ImageView background = backgrounds.get(i);
             if (background.getLayoutX() + background.getFitWidth() <= 0) {
@@ -70,21 +76,21 @@ public class RollingBackground extends Group {
         }
     }
 
+    /**
+     * Repositions backgrounds to ensure seamless scrolling.
+     */
     private void repositionBackgrounds() {
         double totalWidth = 0;
 
-        // Recalculate positions based on the current width of each background
         for (ImageView background : backgrounds) {
             background.setLayoutX(totalWidth);
-            totalWidth += background.getFitWidth(); // Adjust for the new width
+            totalWidth += background.getFitWidth();
         }
 
-        // Ensure enough backgrounds to fill the screen width without gaps
         AppContext context = AppContext.getInstance();
         double screenWidth = context.getScreenWidthPropertyProperty().get();
 
         while (totalWidth < screenWidth) {
-            // Duplicate the last background if necessary
             ImageView lastBackground = backgrounds.get(backgrounds.size() - 1);
             ImageView duplicate = new ImageView(lastBackground.getImage());
             duplicate.setPreserveRatio(true);
@@ -99,14 +105,23 @@ public class RollingBackground extends Group {
         }
     }
 
+    /**
+     * Starts the scrolling effect.
+     */
     public void start() {
         timeline.play();
     }
 
+    /**
+     * Stops the scrolling effect.
+     */
     public void stop() {
         timeline.stop();
     }
 
+    /**
+     * Restarts the scrolling effect, repositioning the backgrounds.
+     */
     public void restart() {
         timeline.stop();
         repositionBackgrounds();

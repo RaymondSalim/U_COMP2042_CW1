@@ -1,9 +1,9 @@
 package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
+import com.example.demo.utils.NavigationHandler;
 import com.example.demo.view.components.ImageButton;
 import com.example.demo.view.components.ImageCheckbox;
-import com.example.demo.view.utils.NavigationHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,11 +16,19 @@ import javafx.scene.text.Font;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.demo.view.utils.Constants.SHARED_RESOURCE_FOLDER;
+import static com.example.demo.utils.Constants.SHARED_RESOURCE_FOLDER;
 
+/**
+ * Represents the settings screen of the game.
+ */
 public class SettingsScreen implements Screen {
     private final NavigationHandler navigationHandler;
 
+    /**
+     * Constructs a {@code SettingsScreen}.
+     *
+     * @param navigationHandler the handler to navigate between screens.
+     */
     public SettingsScreen(NavigationHandler navigationHandler) {
         this.navigationHandler = navigationHandler;
     }

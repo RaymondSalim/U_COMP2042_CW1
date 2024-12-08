@@ -3,7 +3,16 @@ package com.example.demo.observer;
 import com.example.demo.enums.GameState;
 import com.example.demo.observer.base.BaseObservable;
 
+/**
+ * An observable class that notifies {@link GameStateObserver}s about game state events.
+ */
 public abstract class GameStateObservable extends BaseObservable<GameStateObserver> {
+
+    /**
+     * Notifies all registered observers of a specific game state event.
+     *
+     * @param gameState the {@link GameState} event to notify observers about.
+     */
     public void notifyEvent(GameState gameState) {
         for (GameStateObserver observer : observers) {
             switch (gameState) {

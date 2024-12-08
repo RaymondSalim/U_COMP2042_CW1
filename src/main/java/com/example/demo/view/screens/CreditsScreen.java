@@ -1,8 +1,8 @@
 package com.example.demo.view.screens;
 
 import com.example.demo.context.AppContext;
+import com.example.demo.utils.NavigationHandler;
 import com.example.demo.view.components.ImageButton;
-import com.example.demo.view.utils.NavigationHandler;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
@@ -16,8 +16,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-import static com.example.demo.view.utils.Constants.SHARED_RESOURCE_FOLDER;
+import static com.example.demo.utils.Constants.SHARED_RESOURCE_FOLDER;
 
+/**
+ * Represents the credits screen displaying developer credits and design information.
+ */
 public class CreditsScreen implements Screen {
     private final NavigationHandler navigationHandler;
     private final String CREDITS_TEXT = """
@@ -31,6 +34,11 @@ public class CreditsScreen implements Screen {
     private ImageView titleImageView;
     private Timeline timeline;
 
+    /**
+     * Constructs a {@code CreditsScreen}.
+     *
+     * @param navigationHandler the handler to navigate between screens.
+     */
     public CreditsScreen(NavigationHandler navigationHandler) {
         this.navigationHandler = navigationHandler;
     }
@@ -48,6 +56,9 @@ public class CreditsScreen implements Screen {
         return scene;
     }
 
+    /**
+     * Sets up the layout and content for the credits screen.
+     */
     private void setupContent() {
         Background background = new Background(
                 new BackgroundImage(
@@ -84,11 +95,13 @@ public class CreditsScreen implements Screen {
         mainContainer.getChildren().addAll(creditsContainer);
     }
 
+    /**
+     * Displays the end-of-credits scene with a back button.
+     */
     private void showEndOfCreditsScene() {
-        // Back Button
         backButton = new ImageButton(SHARED_RESOURCE_FOLDER + "/backButton.png");
         backButton.setPreserveRatio(true);
-        backButton.setFitWidth(50); // Set a fixed width for the back button
+        backButton.setFitWidth(50);
         backButton.setOnMouseClicked(e -> {
             navigationHandler.showMenuScreen();
             timeline.stop();
@@ -100,21 +113,28 @@ public class CreditsScreen implements Screen {
         mainContainer.getChildren().addAll(titleImageView, backButton);
     }
 
+    /**
+     * Creates the timeline animation for scrolling the credits.
+     *
+     * @return the timeline controlling the credits scroll.
+     */
     private Timeline createTimeline() {
         timeline = new Timeline();
         KeyFrame keyFrame = new KeyFrame(Duration.millis(10), event -> {
-            creditsContainer.setTranslateY(creditsContainer.getTranslateY() - 1); // Move up 1px per frame
-            if (creditsContainer.getBoundsInParent().getMaxY() < 0) { // Check if the text has exited the screen
-                timeline.stop(); // Stop the timeline when text exits
+            creditsContainer.setTranslateY(creditsContainer.getTranslateY() - 1);
+            if (creditsContainer.getBoundsInParent().getMaxY() < 0) {
+                timeline.stop();
                 showEndOfCreditsScene();
             }
         });
         timeline.getKeyFrames().add(keyFrame);
-
-        timeline.setCycleCount(Timeline.INDEFINITE); // Keep running until stopped
+        timeline.setCycleCount(Timeline.INDEFINITE);
         return timeline;
     }
 
+    /**
+     * Starts the scrolling animation for the credits.
+     */
     public void startCredits() {
         mainContainer.getChildren().clear();
         setupContent();

@@ -12,6 +12,12 @@ public class EnemyPlane extends FighterPlane {
     private static final int INITIAL_HEALTH = 1;
     private static final double FIRE_RATE = .01;
 
+    /**
+     * Constructs an {@code EnemyPlane} instance.
+     *
+     * @param initialXPos the initial x-coordinate of the plane.
+     * @param initialYPos the initial y-coordinate of the plane.
+     */
     public EnemyPlane(double initialXPos, double initialYPos) {
         super(IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, INITIAL_HEALTH);
     }
@@ -35,5 +41,4 @@ public class EnemyPlane extends FighterPlane {
     public void updateActor(double deltaTime) {
         updatePosition(deltaTime);
     }
-
 }

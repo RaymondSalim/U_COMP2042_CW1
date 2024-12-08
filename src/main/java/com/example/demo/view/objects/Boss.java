@@ -9,6 +9,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents the boss enemy plane in the game.
+ * <p>
+ * The boss has unique abilities, including a shield and a complex movement pattern.
+ * </p>
+ */
 public class Boss extends FighterPlane {
     private static final String IMAGE_NAME = "bossplane.png";
     private static final String SHIELD_IMAGE_PATH = "/com/example/demo/images/shield.png";
@@ -35,6 +41,9 @@ public class Boss extends FighterPlane {
     private int indexOfCurrentMove;
     private int framesWithShieldActivated;
 
+    /**
+     * Constructs a {@code Boss} instance with its visuals, shield, and movement patterns.
+     */
     public Boss() {
         super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
 
@@ -84,6 +93,9 @@ public class Boss extends FighterPlane {
         }
     }
 
+    /**
+     * Initializes the movement pattern for the boss.
+     */
     private void initializeMovePattern() {
         for (int i = 0; i < MOVE_FREQUENCY_PER_CYCLE; i++) {
             movePattern.add(VERTICAL_VELOCITY);
@@ -93,12 +105,20 @@ public class Boss extends FighterPlane {
         Collections.shuffle(movePattern);
     }
 
+    /**
+     * Updates the shield's state and visual display.
+     */
     private void updateShield() {
         if (isShielded) framesWithShieldActivated++;
         else if (shieldShouldBeActivated()) activateShield();
         if (shieldExhausted()) deactivateShield();
     }
 
+    /**
+     * Calculates the next move direction for the boss based on its movement pattern.
+     *
+     * @return the next move direction as an integer value.
+     */
     private int getNextMove() {
         int currentMove = movePattern.get(indexOfCurrentMove);
         consecutiveMovesInSameDirection++;
@@ -113,44 +133,82 @@ public class Boss extends FighterPlane {
         return currentMove;
     }
 
+    /**
+     * Gets the maximum health of the boss.
+     *
+     * @return the maximum health value.
+     */
     public int getMaxHealth() {
         return MAX_HEALTH;
     }
 
+    /**
+     * Determines whether the boss should fire a projectile in the current frame.
+     *
+     * @return {@code true} if the boss should fire; {@code false} otherwise.
+     */
     private boolean bossFiresInCurrentFrame() {
         return Math.random() < BOSS_FIRE_RATE;
     }
 
+    /**
+     * Calculates the initial y-coordinate for the boss's projectiles.
+     *
+     * @return the y-coordinate where the projectile should spawn.
+     */
     private double getProjectileInitialPosition() {
         return getLayoutY() + getTranslateY() + PROJECTILE_Y_POSITION_OFFSET;
     }
 
+    /**
+     * Determines whether the boss's shield should be activated based on a probability.
+     *
+     * @return {@code true} if the shield should be activated; {@code false} otherwise.
+     */
     private boolean shieldShouldBeActivated() {
         return Math.random() < BOSS_SHIELD_PROBABILITY;
     }
 
+    /**
+     * Checks if the shield has been active for its maximum allowed duration.
+     *
+     * @return {@code true} if the shield duration is exhausted; {@code false} otherwise.
+     */
     private boolean shieldExhausted() {
         return framesWithShieldActivated == MAX_FRAMES_WITH_SHIELD;
     }
 
+    /**
+     * Activates the boss's shield.
+     */
     private void activateShield() {
         isShielded = true;
-        shieldImage.setVisible(true); // Show shield
+        shieldImage.setVisible(true);
     }
 
+    /**
+     * Deactivates the boss's shield.
+     */
     private void deactivateShield() {
         isShielded = false;
         framesWithShieldActivated = 0;
-        shieldImage.setVisible(false); // Hide shield
+        shieldImage.setVisible(false);
         framesWithShieldActivated = 0;
     }
 
+    /**
+     * Updates the shield's position to match the boss.
+     */
     private void updateShieldPosition() {
-        // Position the shield image to align with the boss
-        shieldImage.setLayoutX(getLayoutX() + getTranslateX() - 50); // Slight offset for centering
+        shieldImage.setLayoutX(getLayoutX() + getTranslateX() - 50);
         shieldImage.setLayoutY(getLayoutY() + getTranslateY() - 25);
     }
 
+    /**
+     * Gets the shield's visual representation.
+     *
+     * @return the {@link ImageView} of the shield.
+     */
     public ImageView getShieldImage() {
         return shieldImage;
     }

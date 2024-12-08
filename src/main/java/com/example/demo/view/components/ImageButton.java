@@ -13,7 +13,19 @@ import javafx.util.Duration;
 
 import java.net.URL;
 
+/**
+ * A button with image, hover, and click effects.
+ * <p>
+ * The {@code ImageButton} provides a visual button that reacts to user interaction.
+ * </p>
+ */
 public class ImageButton extends ImageView {
+
+    /**
+     * Constructs a new {@code ImageButton} with the specified image.
+     *
+     * @param path the path to the image resource for the button.
+     */
     public ImageButton(String path) {
         URL imageRes = getClass().getResource(path);
         if (imageRes != null) {
@@ -24,6 +36,9 @@ public class ImageButton extends ImageView {
         this.addHoverEffect();
     }
 
+    /**
+     * Adds a scaling effect for click events.
+     */
     private void addClickEffect() {
         ScaleTransition pressTransition = new ScaleTransition(Duration.millis(100), this);
         pressTransition.setToX(0.9);
@@ -33,7 +48,6 @@ public class ImageButton extends ImageView {
         releaseTransition.setToX(1.0);
         releaseTransition.setToY(1.0);
 
-
         this.setOnMousePressed(event -> {
             pressTransition.playFromStart();
             playAudio();
@@ -41,6 +55,9 @@ public class ImageButton extends ImageView {
         this.setOnMouseReleased(event -> releaseTransition.playFromStart());
     }
 
+    /**
+     * Adds a brightness effect for hover events.
+     */
     private void addHoverEffect() {
         ColorAdjust hoverEffect = new ColorAdjust();
         Timeline hoverEnterTimeline = new Timeline(
@@ -59,6 +76,9 @@ public class ImageButton extends ImageView {
         this.setOnMouseExited(event -> hoverExitTimeline.playFromStart());
     }
 
+    /**
+     * Plays the click sound effect.
+     */
     protected void playAudio() {
         AudioManager manager = AudioManager.getInstance();
         manager.playSoundEffect(AudioEnum.BUTTON_CLICK, false);

@@ -1,19 +1,28 @@
 package com.example.demo.view.overlays;
 
 import com.example.demo.context.AppContext;
+import com.example.demo.utils.Constants;
 import com.example.demo.view.components.ImageButton;
-import com.example.demo.view.utils.Constants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
+/**
+ * Represents the "Game Over" overlay displayed when the player loses.
+ */
 public class GameOverOverlay implements Overlay {
     private final String BG_IMAGE = "/com/example/demo/images/gameOverMenu/gameOverWindow.png";
 
     private VBox menu;
     private Image bgImageFile;
 
+    /**
+     * Constructs a {@code GameOverOverlay}.
+     *
+     * @param onRestart     the action to perform when the "Restart" button is clicked.
+     * @param onLevelSelect the action to perform when the "Level Select" button is clicked.
+     */
     public GameOverOverlay(
             Runnable onRestart,
             Runnable onLevelSelect
@@ -56,12 +65,10 @@ public class GameOverOverlay implements Overlay {
 
         buttonsPane.getChildren().addAll(restartButton, levelSelectButton);
 
-        // Make sure buttons are at the bottom
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
         menu.getChildren().addAll(spacer, buttonsPane);
-
         menu.setBackground(new Background(bgImage));
         menu.setVisible(false);
     }
