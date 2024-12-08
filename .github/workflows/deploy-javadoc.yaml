@@ -42,11 +42,6 @@ jobs:
         with:
           path: target/site/apidocs
 
-      - name: Deploy Javadoc to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./target/site/apidocs
   deploy-javadoc:
     environment:
       name: github-pages
