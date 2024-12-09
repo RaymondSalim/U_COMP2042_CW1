@@ -33,7 +33,7 @@ public abstract class LevelParent extends GameStateObservable {
     /**
      * The initial delay (in seconds) before enemies can start spawning in the level.
      */
-    private final double ENEMY_SPAWN_DELAY = 3.0;
+    protected double ENEMY_SPAWN_DELAY = 3.0;
     /**
      * The maximum number of enemies that can be active at the same time during the level.
      */

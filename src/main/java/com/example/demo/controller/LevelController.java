@@ -135,7 +135,7 @@ public class LevelController implements GameStateObserver {
      * @param levelType the {@link LevelType} to load.
      */
     public void goToLevel(LevelType levelType) {
-        currentLevel = LevelFactory.createLevel(levelType);
+        currentLevel = createLevel(levelType);
         currentLevel.addGameStateObserver(this);
 
         currentLevelView = currentLevel.getLevelView();
@@ -184,7 +184,6 @@ public class LevelController implements GameStateObserver {
     public void startGame() {
         AppContext context = AppContext.getInstance();
         initializeGameTimeline(context.getTargetFPS().doubleValue());
-        pauseMenuOverlay.hide();
         uiController.hideOverlays();
     }
 
@@ -258,5 +257,21 @@ public class LevelController implements GameStateObserver {
         } else {
             resumeGame();
         }
+    }
+
+    protected LevelParent createLevel(LevelType levelType) {
+        return LevelFactory.createLevel(levelType);
+    }
+
+    protected void setGameTimeline(Timeline gameTimeline) {
+        this.gameTimeline = gameTimeline;
+    }
+
+    protected void setCurrentLevel(LevelParent currentLevel) {
+        this.currentLevel = currentLevel;
+    }
+
+    protected void setCurrentLevelView(LevelView currentLevelView) {
+        this.currentLevelView = currentLevelView;
     }
 }

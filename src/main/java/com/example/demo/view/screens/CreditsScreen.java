@@ -91,7 +91,7 @@ public class CreditsScreen implements Screen {
         creditsContainer.getChildren().addAll(titleImageView, creditsLabel);
 
         AppContext context = AppContext.getInstance();
-        creditsContainer.translateYProperty().bind(context.getScreenHeightPropertyProperty().divide(3).multiply(2));
+        creditsContainer.translateYProperty().set(context.getScreenHeightPropertyProperty().divide(3).multiply(2).get());
         mainContainer.getChildren().addAll(creditsContainer);
     }
 
@@ -121,7 +121,7 @@ public class CreditsScreen implements Screen {
     private Timeline createTimeline() {
         timeline = new Timeline();
         KeyFrame keyFrame = new KeyFrame(Duration.millis(10), event -> {
-            creditsContainer.setTranslateY(creditsContainer.getTranslateY() - 1);
+            creditsContainer.translateYProperty().set(creditsContainer.getTranslateY() - 1);
             if (creditsContainer.getBoundsInParent().getMaxY() < 0) {
                 timeline.stop();
                 showEndOfCreditsScene();
