@@ -59,7 +59,7 @@ jobs:
           architecture: x64
 
       - name: Build with Maven
-        run: mvn clean install -B -DskipTests
+        run: mvn clean install -B
 
       - name: Create Tag
         id: git-tag
