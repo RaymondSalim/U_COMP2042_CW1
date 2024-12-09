@@ -8,7 +8,7 @@ import com.example.demo.view.entities.Projectile;
 public class EnemyProjectile extends Projectile {
 
     private static final String IMAGE_NAME = "enemyFire.png";
-    private static final int IMAGE_HEIGHT = 50;
+    private static final int IMAGE_HEIGHT = 25;
     private static final int HORIZONTAL_VELOCITY = -80;
 
     /**
