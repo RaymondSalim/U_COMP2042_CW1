@@ -67,6 +67,11 @@ Here is the list of (hopefully) all the changes made
 - Separated / create controllers
 
 ## Features (Working)
+- GitHub Actions
+  - Require maven build to pass before merging
+  - Create release on merge to `main` branch
+  - Generate and deploy Javadoc on merge to `main` branch
+    
 - Add pause menu in game
 - Add Game Over overlay
 - Add FPS Cap
