@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: mvn clean install -B -DskipTests -Drevision=${GITHUB_SHA::7}
+        run: mvn clean install -B -Drevision=${GITHUB_SHA::7}
 
   release:
     needs: build
@@ -59,7 +59,7 @@ jobs:
           architecture: x64
 
       - name: Build with Maven
-        run: mvn clean install -B -DskipTests
+        run: mvn clean install -B
 
       - name: Create Tag
         id: git-tag
