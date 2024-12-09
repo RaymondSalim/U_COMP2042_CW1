@@ -181,6 +181,7 @@ public class UIController extends GameStateObservable {
      * Hides all overlays, including Pause, Game Over, and Level Complete.
      */
     public void hideOverlays() {
+        pauseOverlay.hide();
         hideLevelCompleteOverlay();
         hideGameOverOverlay();
     }

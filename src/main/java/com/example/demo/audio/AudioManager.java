@@ -48,6 +48,24 @@ public class AudioManager {
     }
 
     /**
+     * Getter for soundEffectPools
+     *
+     * @return map of {@link AudioEnum} to {@link Queue<MediaPlayer>}
+     */
+    protected Map<AudioEnum, Queue<MediaPlayer>> getSoundEffectPools() {
+        return soundEffectPools;
+    }
+
+    /**
+     * Getter for backgroundMusicPlayer
+     *
+     * @return {@link MediaPlayer} for background music
+     */
+    protected MediaPlayer getBackgroundMusicPlayer() {
+        return backgroundMusicPlayer;
+    }
+
+    /**
      * Loads a sound effect into a reusable pool of {@link MediaPlayer} instances.
      *
      * @param audioKey the {@link AudioEnum} key representing the audio.
@@ -170,5 +188,21 @@ public class AudioManager {
         player.volumeProperty().bind(context.volumeProperty().divide(100.0));
         player.setCycleCount(1);
         return player;
+    }
+
+    /**
+     * Clears the soundEffectPool
+     */
+    protected void clearSoundEffectPools() {
+        soundEffectPools.clear();
+    }
+
+    /**
+     * Clears the background media player
+     */
+    protected void clearBackgroundMediaPlayer() {
+        if (backgroundMusicPlayer != null) {
+            backgroundMusicPlayer = null;
+        }
     }
 }

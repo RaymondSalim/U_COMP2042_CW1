@@ -23,8 +23,8 @@ public class GameController implements NavigationHandler {
      */
     public GameController(Stage stage) {
         this.stage = stage;
-        this.uiController = new UIController(stage, this);
-        this.levelController = new LevelController(stage, uiController);
+        this.uiController = createUIController();
+        this.levelController = createLevelController();
     }
 
     @Override
@@ -55,5 +55,13 @@ public class GameController implements NavigationHandler {
     @Override
     public void startLevel(LevelType levelType) {
         levelController.goToLevel(levelType);
+    }
+
+    protected UIController createUIController() {
+        return new UIController(stage, this);
+    }
+
+    protected LevelController createLevelController() {
+        return new LevelController(stage, uiController);
     }
 }
