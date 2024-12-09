@@ -63,3 +63,9 @@ Here is the list of (hopefully) all the changes made
 - Add pause menu in game
 - Implement Observer Pattern to handle game events
 - Game Window is resizable
+
+## Improvements
+
+- There are some test regarding audio ([here](src/test/java/com/example/demo/audio/AudioManagerTest.java)), that has
+  been commented out due to intermittent errors, causing CI to fail.
+    - Sometimes it takes less than 5 seconds for the test to pass, sometimes it might take minutes
