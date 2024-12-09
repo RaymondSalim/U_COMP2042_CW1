@@ -25,7 +25,8 @@ public class CreditsScreen implements Screen {
     private final NavigationHandler navigationHandler;
     private final String CREDITS_TEXT = """
             DEVELOPED BY    RAYMOND SALIM
-            DESIGNED BY     RAYMOND SALIM
+            DESIGNS FROM    craftpix.net
+            AUDIO FROM      kenney.nl, onemansymphony
             """;
     private Scene scene;
     private StackPane mainContainer;
