@@ -16,7 +16,6 @@ import javafx.scene.Group;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Abstract base class for all levels in the game.
@@ -393,7 +392,7 @@ public abstract class LevelParent extends GameStateObservable {
     private void removeDestroyedActors(List<ActiveActorDestructible> actors) {
         List<ActiveActorDestructible> destroyedActors = actors.stream()
                 .filter(ActiveActorDestructible::isDestroyed)
-                .collect(Collectors.toList());
+                .toList();
         root.getChildren().removeAll(destroyedActors);
         actors.removeAll(destroyedActors);
     }
@@ -403,19 +402,7 @@ public abstract class LevelParent extends GameStateObservable {
      */
     private void handlePlaneCollisions() {
         for (ActiveActorDestructible friendly : friendlyUnits) {
-            for (ActiveActorDestructible enemy : enemyUnits) {
-                if (!friendly.isDestroyed() && !enemy.isDestroyed()) {
-                    if (friendly.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                        friendly.takeDamage();
-                        enemy.takeDamage();
-
-                        if (enemy.isDestroyed()) {
-                            user.incrementKillCount();
-                            score += 100;
-                        }
-                    }
-                }
-            }
+            handleEnemyKilled(friendly);
         }
     }
 
@@ -423,29 +410,36 @@ public abstract class LevelParent extends GameStateObservable {
      * Handles collisions between user projectiles and enemies.
      */
     private void handleUserProjectileCollisions() {
-        List<ActiveActorDestructible> projectilesToRemove = new ArrayList<>();
         for (ActiveActorDestructible projectile : userProjectiles) {
-            for (ActiveActorDestructible enemy : enemyUnits) {
-                double projectileX = projectile.getLayoutX() + projectile.getTranslateX();
-                if (projectileX < 0 || projectileX > screenWidth.get()) {
-                    projectilesToRemove.add(projectile);
-                    continue;
-                }
+            double projectileX = projectile.getLayoutX() + projectile.getTranslateX();
+            if (projectileX < 0 || projectileX > screenWidth.get()) {
+                projectile.destroy();
+                continue;
+            }
 
-                if (!projectile.isDestroyed() && !enemy.isDestroyed()) {
-                    if (projectile.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                        projectile.takeDamage();
-                        enemy.takeDamage();
+            handleEnemyKilled(projectile);
+        }
+    }
 
-                        if (enemy.isDestroyed()) {
-                            user.incrementKillCount();
-                            score += 100;
-                        }
+    /**
+     * Base method that handles enemy kill
+     *
+     * @param actor actor that kills the enemy
+     */
+    private void handleEnemyKilled(ActiveActorDestructible actor) {
+        for (ActiveActorDestructible enemy : enemyUnits) {
+            if (!actor.isDestroyed() && !enemy.isDestroyed()) {
+                if (actor.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                    actor.takeDamage();
+                    enemy.takeDamage();
+
+                    if (enemy.isDestroyed()) {
+                        user.incrementKillCount();
+                        score += 100;
                     }
                 }
             }
         }
-        userProjectiles.removeAll(projectilesToRemove);
     }
 
     /**
