@@ -38,13 +38,33 @@ public class LevelOne extends LevelParent {
         com.example.demo.view.levels.LevelOne levelView = (com.example.demo.view.levels.LevelOne) getLevelView();
 
         // Handle delay between phases
-        if (!phaseComplete && stepDelayTimer > 0) {
+        if (stepDelayTimer > 0) {
             stepDelayTimer -= deltaTime;
             return; // Wait until delay is over
         }
 
         switch (tutorialPhase) {
-            case 0: // Movement tutorial
+            case 0:
+                if (!phaseComplete) {
+                    levelView.displayMessage("Press P or ESC to pause the game!");
+                    stepDelayTimer = 2.0;
+                    phaseComplete = true;
+                } else {
+                    levelView.deleteMessage();
+                    transitionToNextPhase();
+                }
+                break;
+            case 1:
+                if (!phaseComplete) {
+                    levelView.displayMessage("You can resize the game window however you'd like!");
+                    stepDelayTimer = 2.0;
+                    phaseComplete = true;
+                } else {
+                    levelView.deleteMessage();
+                    transitionToNextPhase();
+                }
+                break;
+            case 2: // Movement tutorial
                 if (!phaseComplete) {
                     levelView.displayMessage("Use UP and DOWN keys to move your plane!");
                     if (userIsMoving(deltaTime)) {
@@ -59,7 +79,7 @@ public class LevelOne extends LevelParent {
                 }
                 break;
 
-            case 1: // Firing tutorial
+            case 3: // Firing tutorial
                 if (!phaseComplete) {
                     levelView.displayMessage("Press SPACE to fire your missile! Fire at least four missiles!");
                     phaseComplete = missileShot > 3 && missilesPastHalfway();
@@ -71,7 +91,7 @@ public class LevelOne extends LevelParent {
                 }
                 break;
 
-            case 2: // Enemy introduction
+            case 4: // Enemy introduction
                 if (!phaseComplete) {
                     levelView.displayMessage("Destroy the enemy plane!");
                     if (!hasSpawned) {
