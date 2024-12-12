@@ -69,7 +69,7 @@ Here is the list of (hopefully) all the changes made
 ## Features (Working)
 - GitHub Actions
   - Require maven build to pass before merging
-  - Create release on merge to `main` branch
+  - Create release on merge to `main` branch. View Releases [here](https://github.com/RaymondSalim/U_COMP2042_CW1/releases)
   - Generate and deploy Javadoc on merge to `main` branch
     
 - Add pause menu in game
